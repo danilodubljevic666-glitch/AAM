@@ -9,6 +9,17 @@
 2. `npm run install:all` (samo prvi put)
 3. `npm run dev` — pokreće i klijent i server.
 
+## Deploy na Vercel
+Jedan Vercel projekat služi i sajt i API (`/api/*` → `api/index.js`, sve ostalo → `client/dist`).
+Podešavanja su u `vercel.json`, a baza i slike ostaju u Supabase-u.
+
+1. vercel.com → **Add New → Project** → importuj GitHub repo `AAM`.
+2. **Root Directory** ostavi `./` (ne `client`), Framework Preset: **Other**.
+3. **Environment Variables** — iste vrijednosti kao u `client/.env` i `server/.env`:
+   `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+   `TRUST_PROXY=1`, i kad budu spremni `EMAILJS_*` ključevi. (`PORT` i `CLIENT_URL` nisu potrebni.)
+4. **Deploy**. Svaki sljedeći `git push` na `main` automatski objavljuje novu verziju.
+
 ## Narudžbe na email (EmailJS)
 Svaka narudžba se čuva u Supabase tabeli `orders` i šalje na email preko [EmailJS](https://www.emailjs.com)
 (besplatno do 200 emailova mjesečno). Cijene uvijek računa server iz baze.
