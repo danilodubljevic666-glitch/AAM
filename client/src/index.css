@@ -89,6 +89,12 @@ body {
   @apply bg-night text-bone font-sans antialiased;
 }
 
+/* Vidljiv fokus kad se sajt koristi tastaturom (Tab); mišem se ne prikazuje */
+:where(a, button, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-alarm);
+  outline-offset: 3px;
+}
+
 ::selection {
   @apply bg-alarm text-night;
 }

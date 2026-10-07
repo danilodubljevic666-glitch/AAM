@@ -6,6 +6,7 @@ import Reveal from '../components/Reveal.jsx'
 import { LoadError, SkeletonCards } from '../components/LoadState.jsx'
 import { useProducts } from '../context/ProductsContext.jsx'
 import { reviews } from '../data/reviews.js'
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '../lib/site.js'
 import { usePageTitle } from '../lib/usePageTitle.js'
 
 // Koliko je ostalo do sledećih 02:00
@@ -168,6 +169,28 @@ export default function Home() {
           ))}
         </ul>
       </section>
+
+      {/* INSTAGRAM — završetak stranice: tu se najavljuju novi dropovi */}
+      {INSTAGRAM_URL && (
+        <Reveal as="section" className="mx-auto max-w-7xl px-4 pt-24 sm:px-6">
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative block overflow-hidden border border-night-600 bg-night-800 px-6 py-16 text-center transition-colors duration-300 hover:border-alarm sm:py-24"
+          >
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-alarm/15 opacity-60 blur-[90px] transition-opacity duration-500 group-hover:opacity-100" />
+            <p className="relative font-mono text-xs uppercase tracking-[0.3em] text-ash">Novi dropovi izlaze u 02:00</p>
+            <p className="relative mt-5 font-display text-[clamp(2.25rem,8vw,6rem)] uppercase leading-none [overflow-wrap:anywhere]">
+              @{INSTAGRAM_HANDLE}
+            </p>
+            <span className="relative mt-8 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-alarm">
+              Zaprati nas na Instagramu
+              <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
+            </span>
+          </a>
+        </Reveal>
+      )}
     </>
   )
 }

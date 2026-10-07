@@ -35,7 +35,7 @@ export default function NotFound({ message = 'Ova stranica je otišla na spavanj
       </h1>
 
       <p className="relative mt-6 max-w-md animate-fade-up text-lg text-ash [animation-delay:200ms]">{message}</p>
-      <p className="relative mt-2 max-w-full animate-fade-up truncate font-mono text-xs text-night-600 [animation-delay:250ms]">{pathname}</p>
+      <p className="relative mt-2 max-w-full animate-fade-up truncate font-mono text-xs text-ash/60 [animation-delay:250ms]">{pathname}</p>
 
       <nav className="relative mt-10 flex animate-fade-up flex-wrap justify-center gap-3 [animation-delay:350ms]" aria-label="Korisni linkovi">
         {links.map((l, i) => (

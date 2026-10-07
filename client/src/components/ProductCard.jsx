@@ -19,9 +19,10 @@ export default function ProductCard({ product, index = 0 }) {
             className="absolute inset-0 m-auto h-[80%] w-[80%] transition-transform duration-500 group-hover:-rotate-2 group-hover:scale-105"
           />
         </div>
-        <div className="mt-3 flex items-start justify-between gap-4">
+        {/* na uskim karticama (telefon) cijena ide ispod naziva, da se ne guraju */}
+        <div className="mt-3 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div>
-            <h3 className="font-display text-xl uppercase tracking-wide transition-colors group-hover:text-alarm">{product.name}</h3>
+            <h3 className="font-display text-xl uppercase leading-tight tracking-wide transition-colors group-hover:text-alarm">{product.name}</h3>
             <p className="font-mono text-xs uppercase text-ash">{product.category}</p>
           </div>
           <p className="whitespace-nowrap font-mono text-sm">{formatPrice(product.price)}</p>

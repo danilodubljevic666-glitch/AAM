@@ -1,0 +1,89 @@
+<!-- EmailJS šablon za obavještenje o novoj narudžbi (Email Templates → Content → Code editor) -->
+<div style="margin:0;padding:24px 12px;background-color:#0b0b0d;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f2efe8;">
+  <!-- tekst koji se vidi u pregledu inboxa -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">{{customer_name}} · {{customer_city}} · {{total}}</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;border-collapse:collapse;background-color:#141417;border:1px solid #2a2a30;border-top:4px solid #ff3b2f;">
+    <!-- zaglavlje -->
+    <tr>
+      <td style="padding:22px 28px;border-bottom:1px solid #2a2a30;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="font-size:26px;font-weight:800;letter-spacing:5px;color:#f2efe8;">2<span style="color:#ff3b2f;">&Lambda;</span>M</td>
+            <td align="right" style="font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8c8a85;">Nova narudžba</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- broj narudžbe i iznos -->
+    <tr>
+      <td style="padding:28px 28px 8px;">
+        <p style="margin:0;font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8c8a85;">Broj narudžbe</p>
+        <p style="margin:6px 0 0;font-family:'Courier New',Courier,monospace;font-size:20px;font-weight:700;color:#ff3b2f;">{{reference}}</p>
+        <p style="margin:20px 0 0;font-size:40px;font-weight:800;line-height:1;color:#f2efe8;">{{total}}</p>
+        <p style="margin:12px 0 0;">
+          <span style="display:inline-block;padding:5px 10px;background-color:#ff3b2f;color:#0b0b0d;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Plaćanje pouzećem</span>
+        </p>
+      </td>
+    </tr>
+
+    <!-- kupac -->
+    <tr>
+      <td style="padding:24px 28px 0;">
+        <p style="margin:0 0 10px;font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8c8a85;">Kupac</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #2a2a30;background-color:#0b0b0d;">
+          <tr>
+            <td style="padding:16px 18px;font-size:15px;line-height:1.7;color:#f2efe8;">
+              <strong style="font-size:17px;">{{customer_name}}</strong><br />
+              <a href="tel:{{customer_phone}}" style="color:#f2efe8;text-decoration:none;">{{customer_phone}}</a><br />
+              <a href="mailto:{{customer_email}}" style="color:#f2efe8;text-decoration:underline;">{{customer_email}}</a><br />
+              <span style="color:#8c8a85;">{{customer_address}}, {{customer_city}}</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- proizvodi -->
+    <tr>
+      <td style="padding:24px 28px 0;">
+        <p style="margin:0 0 10px;font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8c8a85;">Proizvodi</p>
+        <div style="padding:16px 18px;border:1px solid #2a2a30;background-color:#0b0b0d;font-size:15px;line-height:1.9;color:#f2efe8;">{{{items_html}}}</div>
+      </td>
+    </tr>
+
+    <!-- iznosi -->
+    <tr>
+      <td style="padding:20px 28px 0;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px;color:#f2efe8;">
+          <tr>
+            <td style="padding:6px 0;color:#8c8a85;">Međuzbir</td>
+            <td align="right" style="padding:6px 0;font-family:'Courier New',Courier,monospace;">{{subtotal}}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;color:#8c8a85;">Dostava</td>
+            <td align="right" style="padding:6px 0;font-family:'Courier New',Courier,monospace;">{{shipping}}</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 0 0;border-top:1px solid #2a2a30;font-weight:800;text-transform:uppercase;letter-spacing:1px;">Ukupno</td>
+            <td align="right" style="padding:12px 0 0;border-top:1px solid #2a2a30;font-family:'Courier New',Courier,monospace;font-size:18px;font-weight:700;color:#ff3b2f;">{{total}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- dugmad -->
+    <tr>
+      <td style="padding:28px 28px 30px;">
+        <a href="mailto:{{customer_email}}?subject=Narud%C5%BEba%20{{reference}}" style="display:inline-block;margin:0 8px 8px 0;padding:13px 22px;background-color:#f2efe8;color:#0b0b0d;text-decoration:none;font-family:'Courier New',Courier,monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Odgovori kupcu</a>
+        <a href="tel:{{customer_phone}}" style="display:inline-block;margin:0 0 8px;padding:12px 21px;border:1px solid #2a2a30;color:#f2efe8;text-decoration:none;font-family:'Courier New',Courier,monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Pozovi</a>
+      </td>
+    </tr>
+  </table>
+
+  <p style="max-width:600px;margin:16px auto 0;font-family:'Courier New',Courier,monospace;font-size:11px;line-height:1.6;letter-spacing:1px;text-align:center;color:#8c8a85;">
+    Narudžba je sačuvana i u bazi (Supabase → orders).<br />
+    2AM — Same city, different thoughts
+  </p>
+</div>

@@ -11,11 +11,15 @@ import { formatPrice } from '../lib/format.js'
 import { usePageTitle } from '../lib/usePageTitle.js'
 import NotFound from './NotFound.jsx'
 
-const details = [
-  ['Materijal', '100% pamuk, 240g/m²'],
-  ['Održavanje', 'Pranje na 30°, naopačke, bez sušilice'],
-  ['Dostava', 'Slanje u roku od 24h, 2–3 radna dana'],
-]
+// Detalji zavise od vrste proizvoda: "240g pamuk" važi za majice, održavanje za odjeću, a kačket
+// dobija samo dostavu. Materijal ostalih proizvoda upiši u opis proizvoda u admin panelu.
+const SHIPPING = ['Dostava', 'Slanje u roku od 24h, 2–3 radna dana']
+const CARE = ['Održavanje', 'Pranje na 30°, naopačke, bez sušilice']
+const detailsFor = (category) => {
+  if (category === 'Majice') return [['Materijal', '100% pamuk, 240g/m²'], CARE, SHIPPING]
+  if (category === 'Duksevi' || category === 'Komplet') return [CARE, SHIPPING]
+  return [SHIPPING]
+}
 
 export default function Product() {
   const { slug } = useParams()
@@ -131,7 +135,7 @@ function ProductView({ slug }) {
           </button>
 
           <dl className="mt-10 animate-fade-up divide-y divide-night-600 border-y border-night-600 [animation-delay:480ms]">
-            {details.map(([k, v]) => (
+            {detailsFor(product.category).map(([k, v]) => (
               <div key={k} className="flex justify-between gap-4 py-4 text-sm">
                 <dt className="font-mono text-xs uppercase tracking-widest text-ash">{k}</dt>
                 <dd className="text-right">{v}</dd>
