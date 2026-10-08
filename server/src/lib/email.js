@@ -5,6 +5,16 @@ const { EMAILJS_SERVICE_ID, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY, EMAILJS_ORD
 
 export const orderEmailConfigured = Boolean(EMAILJS_SERVICE_ID && EMAILJS_PUBLIC_KEY && EMAILJS_ORDER_TEMPLATE_ID)
 
+// Za /api/health: da li server vidi ključeve (bez otkrivanja vrijednosti) — korisno na Vercelu
+const tail = (v) => (v ? `…${v.trim().slice(-4)}` : null)
+export const emailStatus = {
+  ready: orderEmailConfigured,
+  serviceId: tail(EMAILJS_SERVICE_ID),
+  templateId: tail(EMAILJS_ORDER_TEMPLATE_ID),
+  publicKey: Boolean(EMAILJS_PUBLIC_KEY),
+  privateKey: Boolean(EMAILJS_PRIVATE_KEY),
+}
+
 if (!orderEmailConfigured) {
   console.warn('⚠ EmailJS nije podešen u server/.env — narudžbe se samo čuvaju u bazi, bez emaila')
 }
