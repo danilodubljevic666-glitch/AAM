@@ -4,7 +4,7 @@ import { inputClass, labelClass, primaryButton, secondaryButton } from '../compo
 import ProductImage from '../components/ProductImage.jsx'
 import { useProducts } from '../context/ProductsContext.jsx'
 import { api } from '../lib/api.js'
-import { formatPrice } from '../lib/format.js'
+import Price from '../components/Price.jsx'
 import { supabase } from '../lib/supabase.js'
 import { usePageTitle } from '../lib/usePageTitle.js'
 
@@ -193,7 +193,9 @@ function Dashboard({ session }) {
                   {p.tag && ` · ${p.tag}`}
                 </p>
               </div>
-              <p className="w-28 font-mono text-sm">{formatPrice(p.price)}</p>
+              <p className="w-36 font-mono text-sm">
+                <Price product={p} />
+              </p>
               <div className="flex flex-wrap gap-2">
                 <button disabled={busyId !== null} onClick={() => setEditing(p)} className={`${secondaryButton} px-4 py-2`}>Izmijeni</button>
                 <button disabled={busyId !== null} onClick={() => toggleActive(p)} className={`${secondaryButton} px-4 py-2`}>

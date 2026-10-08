@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ImageZoom from '../components/ImageZoom.jsx'
+import Price, { DiscountBadge } from '../components/Price.jsx'
 import ProductImage from '../components/ProductImage.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { LoadError } from '../components/LoadState.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { useProducts } from '../context/ProductsContext.jsx'
-import { formatPrice } from '../lib/format.js'
 import { usePageTitle } from '../lib/usePageTitle.js'
 import NotFound from './NotFound.jsx'
 
@@ -98,7 +98,10 @@ function ProductView({ slug }) {
             <Link to="/shop" className="hover:text-alarm">Shop</Link> / {product.category}
           </nav>
           <h1 className="mt-4 animate-fade-up font-display text-6xl uppercase leading-none [animation-delay:80ms] sm:text-7xl">{product.name}</h1>
-          <p className="mt-4 animate-fade-up font-mono text-xl [animation-delay:160ms]">{formatPrice(product.price)}</p>
+          <p className="mt-4 flex animate-fade-up flex-wrap items-center gap-3 font-mono text-xl [animation-delay:160ms]">
+            <Price product={product} />
+            <DiscountBadge product={product} />
+          </p>
           <p className="mt-6 max-w-md animate-fade-up text-ash [animation-delay:240ms]">{product.description}</p>
 
           <div className="mt-10 animate-fade-up [animation-delay:320ms]">

@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
 import { supabase } from '../lib/supabase.js'
-import { ADMIN_COLUMNS, IMAGE_BUCKET, parseProduct } from '../lib/products.js'
+import { ADMIN_COLUMNS, IMAGE_BUCKET, MISSING_COLUMN_MESSAGE, missingColumn, parseProduct } from '../lib/products.js'
 import { requireAdmin } from '../middleware/auth.js'
 
 const router = Router()
@@ -40,6 +40,7 @@ router.post('/products', async (req, res, next) => {
     if (invalid) return res.status(400).json({ error: invalid })
     const { data, error } = await supabase.from('products').insert(value).select(ADMIN_COLUMNS).single()
     if (error && conflict(error)) return res.status(409).json({ error: 'Proizvod sa tim slugom već postoji' })
+    if (error && missingColumn(error)) return res.status(503).json({ error: MISSING_COLUMN_MESSAGE })
     if (error) throw error
     res.status(201).json(data)
   } catch (err) {
@@ -58,6 +59,7 @@ router.patch('/products/:id', async (req, res, next) => {
 
     const { data, error } = await supabase.from('products').update(value).eq('id', req.params.id).select(ADMIN_COLUMNS).single()
     if (error && conflict(error)) return res.status(409).json({ error: 'Proizvod sa tim slugom već postoji' })
+    if (error && missingColumn(error)) return res.status(503).json({ error: MISSING_COLUMN_MESSAGE })
     if (error) throw error
 
     await removeImages(old.images.filter((u) => !value.images.includes(u)))

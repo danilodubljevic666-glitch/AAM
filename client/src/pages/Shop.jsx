@@ -4,13 +4,14 @@ import ProductCard from '../components/ProductCard.jsx'
 import { LoadError, SkeletonCards } from '../components/LoadState.jsx'
 import { useProducts } from '../context/ProductsContext.jsx'
 import { CATEGORIES } from '../lib/categories.js'
+import { priceOf } from '../lib/pricing.js'
 import { INSTAGRAM_URL } from '../lib/site.js'
 import { usePageTitle } from '../lib/usePageTitle.js'
 
 const sorts = {
   default: { label: 'Preporučeno', fn: () => 0 },
-  'price-asc': { label: 'Cijena: niža', fn: (a, b) => a.price - b.price },
-  'price-desc': { label: 'Cijena: viša', fn: (a, b) => b.price - a.price },
+  'price-asc': { label: 'Cijena: niža', fn: (a, b) => priceOf(a) - priceOf(b) },
+  'price-desc': { label: 'Cijena: viša', fn: (a, b) => priceOf(b) - priceOf(a) },
 }
 
 // 1 proizvod, 21 proizvod, 2 / 5 / 11 proizvoda

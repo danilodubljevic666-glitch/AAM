@@ -88,7 +88,7 @@ router.post('/', async (req, res, next) => {
 
     // Nazivi, cene i veličine uvek iz baze — ne verujemo ceni koju pošalje browser
     const ids = [...new Set(items.map((i) => i.id))]
-    const { data: products, error } = await supabase.from('products').select('id, name, price, sizes').in('id', ids).eq('active', true)
+    const { data: products, error } = await supabase.from('products').select('*').in('id', ids).eq('active', true)
     if (error) throw error
     const byId = new Map(products.map((p) => [p.id, p]))
 
@@ -98,7 +98,7 @@ router.post('/', async (req, res, next) => {
       if (!p || !p.sizes.includes(i.size)) {
         return res.status(409).json({ error: 'Neki proizvodi iz korpe više nisu dostupni. Osvježi stranicu i provjeri korpu.' })
       }
-      lines.push({ id: p.id, name: p.name, size: i.size, qty: i.qty, price: p.price })
+      lines.push({ id: p.id, name: p.name, size: i.size, qty: i.qty, price: p.sale_price ?? p.price })
     }
     const subtotal = lines.reduce((n, l) => n + l.price * l.qty, 0)
     const shipping = subtotal >= FREE_SHIPPING ? 0 : SHIPPING_COST

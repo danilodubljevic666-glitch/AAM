@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
+import Price, { DiscountBadge } from './Price.jsx'
 import ProductImage from './ProductImage.jsx'
 import Reveal from './Reveal.jsx'
-import { formatPrice } from '../lib/format.js'
 
 // index = pozicija u mreži, za kaskadno pojavljivanje kartica
 export default function ProductCard({ product, index = 0 }) {
@@ -14,6 +14,7 @@ export default function ProductCard({ product, index = 0 }) {
               {product.tag}
             </span>
           )}
+          <DiscountBadge product={product} className="absolute right-3 top-3 z-10" />
           <ProductImage
             product={product}
             className="absolute inset-0 m-auto h-[80%] w-[80%] transition-transform duration-500 group-hover:-rotate-2 group-hover:scale-105"
@@ -25,7 +26,9 @@ export default function ProductCard({ product, index = 0 }) {
             <h3 className="font-display text-xl uppercase leading-tight tracking-wide transition-colors group-hover:text-alarm">{product.name}</h3>
             <p className="font-mono text-xs uppercase text-ash">{product.category}</p>
           </div>
-          <p className="whitespace-nowrap font-mono text-sm">{formatPrice(product.price)}</p>
+          <p className="whitespace-nowrap font-mono text-sm sm:text-right">
+            <Price product={product} className="sm:justify-end" />
+          </p>
         </div>
       </Link>
     </Reveal>

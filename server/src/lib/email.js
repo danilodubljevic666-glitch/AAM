@@ -1,10 +1,9 @@
 // Slanje emailova preko EmailJS REST API-ja (ključevi su u server/.env, nikad u browseru).
 // U EmailJS nalogu uključi: Account → Security → "Allow EmailJS API for non-browser applications".
+// Private Key je opcion (preporučen): ako je u EmailJS-u uključeno "Use Private Key", mora biti postavljen.
 const { EMAILJS_SERVICE_ID, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY, EMAILJS_ORDER_TEMPLATE_ID } = process.env
 
-export const orderEmailConfigured = Boolean(
-  EMAILJS_SERVICE_ID && EMAILJS_PUBLIC_KEY && EMAILJS_PRIVATE_KEY && EMAILJS_ORDER_TEMPLATE_ID,
-)
+export const orderEmailConfigured = Boolean(EMAILJS_SERVICE_ID && EMAILJS_PUBLIC_KEY && EMAILJS_ORDER_TEMPLATE_ID)
 
 if (!orderEmailConfigured) {
   console.warn('⚠ EmailJS nije podešen u server/.env — narudžbe se samo čuvaju u bazi, bez emaila')
@@ -18,7 +17,7 @@ async function send(templateId, templateParams) {
       service_id: EMAILJS_SERVICE_ID,
       template_id: templateId,
       user_id: EMAILJS_PUBLIC_KEY,
-      accessToken: EMAILJS_PRIVATE_KEY,
+      ...(EMAILJS_PRIVATE_KEY && { accessToken: EMAILJS_PRIVATE_KEY }),
       template_params: templateParams,
     }),
   })

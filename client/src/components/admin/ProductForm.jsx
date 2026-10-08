@@ -9,7 +9,8 @@ const DEFAULT_SIZES = ['S', 'M', 'L', 'XL']
 const TAGS = ['Novo', 'Bestseller', 'Limitirano']
 const MAX_SIDE = 1600 // px — veće slike se smanjuju pre uploada
 
-const EMPTY = { name: '', slug: '', price: '', category: '', tag: '', sizes: DEFAULT_SIZES, description: '', images: [], active: true, sort_order: 0 }
+const EMPTY = { name: '', slug: '', price: '', sale_price: '', category: '', tag: '', sizes: DEFAULT_SIZES, description: '', images: [], active: true, sort_order: 0 }
+const QUICK_DISCOUNTS = [10, 20, 30, 50] // %
 const isCategory = (name) => CATEGORIES.some((c) => c.name === name)
 
 // "Still Dreaming Tee" → "still-dreaming-tee", "Nikšić Žuta" → "niksic-zuta"
@@ -41,7 +42,13 @@ export default function ProductForm({ product, token, onCancel, onSaved }) {
   // U bazi je cena u centima, u formi u evrima; stara kategorija (npr. "Oversized") mora ponovo da se izabere
   const [form, setForm] = useState(() =>
     product
-      ? { ...product, price: product.price / 100, tag: product.tag ?? '', category: isCategory(product.category) ? product.category : '' }
+      ? {
+          ...product,
+          price: product.price / 100,
+          sale_price: product.sale_price != null ? product.sale_price / 100 : '',
+          tag: product.tag ?? '',
+          category: isCategory(product.category) ? product.category : '',
+        }
       : EMPTY,
   )
   const [slugTouched, setSlugTouched] = useState(Boolean(product))
@@ -65,6 +72,16 @@ export default function ProductForm({ product, token, onCancel, onSaved }) {
       return { ...f, category, sizes }
     })
   }
+
+  // Popust: brza dugmad računaju akcijsku cijenu iz redovne; pored polja piše koliko je to procenata
+  const regular = Number(form.price)
+  const sale = Number(form.sale_price)
+  const hasSale = form.sale_price !== '' && sale > 0
+  const saleInvalid = hasSale && regular > 0 && sale >= regular
+  const salePercent = hasSale && !saleInvalid && regular > 0 ? Math.round((1 - sale / regular) * 100) : 0
+
+  const applyDiscount = (pct) =>
+    setForm((f) => ({ ...f, sale_price: (Math.round(Number(f.price) * (100 - pct)) / 100).toFixed(2) }))
 
   const toggleSize = (s) =>
     setForm((f) => ({ ...f, sizes: f.sizes.includes(s) ? f.sizes.filter((x) => x !== s) : [...f.sizes, s] }))
@@ -101,7 +118,12 @@ export default function ProductForm({ product, token, onCancel, onSaved }) {
     setSaving(true)
     setError(null)
     try {
-      const body = JSON.stringify({ ...form, price: Math.round(Number(form.price) * 100), sort_order: Number(form.sort_order) })
+      const body = JSON.stringify({
+        ...form,
+        price: Math.round(Number(form.price) * 100),
+        sale_price: form.sale_price === '' ? null : Math.round(Number(form.sale_price) * 100),
+        sort_order: Number(form.sort_order),
+      })
       if (product) await api(`/admin/products/${product.id}`, { method: 'PATCH', token, body })
       else await api('/admin/products', { method: 'POST', token, body })
       await onSaved()
@@ -161,6 +183,50 @@ export default function ProductForm({ product, token, onCancel, onSaved }) {
                 ))}
               </select>
             </label>
+          </div>
+
+          {/* POPUST — akcijska cijena; prazno polje = bez popusta */}
+          <div className="border border-night-600 p-5">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <label htmlFor="sale-price" className={labelClass}>Akcijska cijena (€)</label>
+              {saleInvalid ? (
+                <span className="font-mono text-xs text-alarm">Mora biti manja od redovne cijene</span>
+              ) : (
+                salePercent > 0 && <span className="font-mono text-xs text-alarm">−{salePercent}% od redovne cijene</span>
+              )}
+            </div>
+            <input
+              id="sale-price"
+              type="number"
+              min="0.01"
+              step="0.01"
+              value={form.sale_price}
+              onChange={set('sale_price')}
+              placeholder="Prazno = bez popusta"
+              className={inputClass}
+            />
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {QUICK_DISCOUNTS.map((pct) => (
+                <button
+                  key={pct}
+                  type="button"
+                  disabled={!(regular > 0)}
+                  onClick={() => applyDiscount(pct)}
+                  className="border border-night-600 px-3 py-1.5 font-mono text-xs transition-colors hover:border-bone disabled:opacity-40"
+                >
+                  −{pct}%
+                </button>
+              ))}
+              {form.sale_price !== '' && (
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, sale_price: '' }))}
+                  className="px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-ash transition-colors hover:text-alarm"
+                >
+                  Ukloni popust
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">

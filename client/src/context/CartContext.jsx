@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useProducts } from './ProductsContext.jsx'
+import { priceOf } from '../lib/pricing.js'
 
 const CartContext = createContext(null)
 const STORAGE_KEY = 'aam-cart'
@@ -21,8 +22,8 @@ function syncWithCatalog(items, products) {
   return items.flatMap((i) => {
     const p = byId.get(i.id)
     if (!p) return []
-    const { slug, name, price, images, color, ink, print } = p
-    return [{ ...i, slug, name, price, images, color, ink, print }]
+    const { slug, name, images, color, ink, print } = p
+    return [{ ...i, slug, name, price: priceOf(p), images, color, ink, print }]
   })
 }
 
@@ -49,8 +50,8 @@ export function CartProvider({ children }) {
         if (prev.some((i) => sameLine(i, product.id, size))) {
           return prev.map((i) => (sameLine(i, product.id, size) ? { ...i, qty: i.qty + qty } : i))
         }
-        const { id, slug, name, price, images, color, ink, print } = product
-        return [...prev, { id, slug, name, price, images, color, ink, print, size, qty }]
+        const { id, slug, name, images, color, ink, print } = product
+        return [...prev, { id, slug, name, price: priceOf(product), images, color, ink, print, size, qty }]
       })
       setIsOpen(true)
     }
