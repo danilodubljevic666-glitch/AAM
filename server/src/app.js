@@ -5,6 +5,7 @@ import productsRouter from './routes/products.js'
 import adminRouter from './routes/admin.js'
 import contactRouter from './routes/contact.js'
 import ordersRouter from './routes/orders.js'
+import seoRouter from './routes/seo.js'
 import { notFound, errorHandler } from './middleware/errors.js'
 import { contactLimit, ordersLimit } from './middleware/rateLimit.js'
 
@@ -24,6 +25,12 @@ app.use('/api/products', productsRouter)
 app.use('/api/contact', contactLimit, contactRouter) // max 3 poruke na sat po IP adresi
 app.use('/api/orders', ordersLimit, ordersRouter) // max 5 narudžbi na sat po IP adresi
 app.use('/api/admin', adminRouter)
+
+// Sitemap i pregled linka: Vercel ih preusmjerava ovamo sa /sitemap.xml i /shop/...
+// Montirano dva puta namjerno — ako preusmjeravanje ikad promijeni putanju,
+// /api/sitemap.xml ostaje kao rezervna adresa koja sigurno radi.
+app.use(seoRouter)
+app.use('/api', seoRouter)
 
 app.use(notFound)
 app.use(errorHandler)

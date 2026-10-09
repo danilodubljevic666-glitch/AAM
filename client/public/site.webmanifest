@@ -1,0 +1,22 @@
+{
+  "name": "2AM — Same city, different thoughts",
+  "short_name": "2AM",
+  "description": "Majice za one koji su budni kad svi drugi spavaju.",
+  "lang": "sr-Latn-ME",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0b0d",
+  "theme_color": "#0b0b0d",
+  "icons": [
+    { "src": "/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Shop", "url": "/shop" },
+    { "name": "Korpa", "url": "/korpa" }
+  ]
+}

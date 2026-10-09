@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import SplitText from '../components/SplitText.jsx'
 import { INSTAGRAM_URL } from '../lib/site.js'
-import { usePageTitle } from '../lib/usePageTitle.js'
+import { useSeo } from '../lib/seo.js'
 
 // Samo tvrdnje koje već stoje na sajtu (manifest na početnoj i opis brenda)
 const VALUES = [
@@ -11,14 +12,21 @@ const VALUES = [
 ]
 
 export default function About() {
-  usePageTitle('O nama')
+  useSeo({
+    title: 'O nama',
+    description:
+      'Priča iza 2AM — brenda za noćne ptice. Teški pamuk, male serije i lokalna izrada, dizajnirano noću, nošeno danju.',
+  })
   return (
     <>
       <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6">
         <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.3em] text-ash">O nama</p>
-        <h1 className="mt-4 max-w-5xl animate-fade-up font-display text-6xl uppercase leading-[0.95] [animation-delay:100ms] sm:text-8xl">
-          Sve je počelo <span className="text-alarm">u 2 ujutro.</span>
-        </h1>
+        <SplitText
+          as="h1"
+          parts={[{ t: 'Sve je počelo ' }, { t: 'u 2 ujutro.', c: 'text-alarm' }]}
+          step={20}
+          className="mt-4 block max-w-5xl font-display text-6xl uppercase leading-[0.95] sm:text-8xl"
+        />
       </section>
 
       <section className="mx-auto mt-16 grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20">

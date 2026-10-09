@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom'
 import CartLine from '../components/CartLine.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { formatPrice } from '../lib/format.js'
-import { FREE_SHIPPING, shippingFor } from '../lib/shipping.js'
-import { usePageTitle } from '../lib/usePageTitle.js'
+import { shippingFor } from '../lib/shipping.js'
+import { useSeo } from '../lib/seo.js'
 
 export default function Cart() {
-  usePageTitle('Korpa')
+  useSeo({ title: 'Korpa', noIndex: true })
   const { items, total } = useCart()
   const shipping = shippingFor(total)
 
@@ -39,14 +39,9 @@ export default function Cart() {
             <div className="flex justify-between"><dt className="text-ash">Dostava</dt><dd>{shipping ? formatPrice(shipping) : 'Besplatno'}</dd></div>
             <div className="flex justify-between border-t border-night-600 pt-3 text-base"><dt>Ukupno</dt><dd>{formatPrice(total + shipping)}</dd></div>
           </dl>
-          {shipping > 0 && (
-            <p className="mt-4 font-mono text-[11px] uppercase text-alarm">
-              Još {formatPrice(FREE_SHIPPING - total)} do besplatne dostave
-            </p>
-          )}
           <Link
             to="/narudzba"
-            className="mt-6 block w-full bg-bone py-4 text-center font-mono text-xs font-bold uppercase tracking-widest text-night transition-[background-color,scale] hover:bg-alarm active:scale-[0.98]"
+            className="btn-shine mt-6 block w-full bg-bone py-4 text-center font-mono text-xs font-bold uppercase tracking-widest text-night transition-[background-color,scale] hover:bg-alarm active:scale-[0.98]"
           >
             Naruči
           </Link>

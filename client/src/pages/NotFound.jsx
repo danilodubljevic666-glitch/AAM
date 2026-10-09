@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { usePageTitle } from '../lib/usePageTitle.js'
+import { useSeo } from '../lib/seo.js'
 
 const links = [
   { to: '/', label: 'Početna' },
@@ -9,7 +9,7 @@ const links = [
 
 // message — npr. za majicu koja ne postoji; inače opšta poruka
 export default function NotFound({ message = 'Ova stranica je otišla na spavanje.' }) {
-  usePageTitle('Stranica ne postoji')
+  useSeo({ title: 'Stranica ne postoji', noIndex: true })
   const { pathname } = useLocation()
 
   return (

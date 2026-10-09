@@ -6,7 +6,8 @@ import { useProducts } from '../context/ProductsContext.jsx'
 import { CATEGORIES } from '../lib/categories.js'
 import { priceOf } from '../lib/pricing.js'
 import { INSTAGRAM_URL } from '../lib/site.js'
-import { usePageTitle } from '../lib/usePageTitle.js'
+import SplitText from '../components/SplitText.jsx'
+import { useSeo } from '../lib/seo.js'
 
 const sorts = {
   default: { label: 'Preporučeno', fn: () => 0 },
@@ -23,7 +24,11 @@ export default function Shop() {
   const [params, setParams] = useSearchParams()
   const active = CATEGORIES.find((c) => c.slug === params.get('kategorija')) ?? null
   const [sort, setSort] = useState('default')
-  usePageTitle(active ? active.name : 'Shop')
+  useSeo({
+    title: active ? active.name : 'Shop',
+    description:
+      'Cijela 2AM kolekcija — majice, duksevi, kačketi i kompleti od teškog pamuka. Plaćanje pouzećem, dostava širom Crne Gore.',
+  })
 
   const filters = useMemo(
     () => [
@@ -46,7 +51,7 @@ export default function Shop() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.3em] text-ash">Kolekcija 01</p>
-      <h1 className="mt-2 animate-fade-up font-display text-7xl uppercase [animation-delay:100ms] sm:text-8xl">Shop</h1>
+      <SplitText as="h1" text="Shop" className="mt-2 block font-display text-7xl uppercase sm:text-8xl" />
 
       {status === 'ready' && products.length === 0 ? (
         <div className="mt-10 animate-fade-up border-y border-night-600 py-24 text-center [animation-delay:200ms]">
@@ -107,6 +112,9 @@ export default function Shop() {
             </div>
           ) : (
             <>
+              {/* Naslov mreže: nevidljiv je, ali bez njega se sa h1 skače pravo na h3
+                  (čitači ekrana i Google prate redoslijed naslova) */}
+              <h2 className="sr-only">{active ? active.name : 'Svi proizvodi'}</h2>
               <p className="mt-6 font-mono text-xs uppercase text-ash">
                 {status === 'loading' ? 'Učitavanje…' : `${visible.length} ${countLabel(visible.length)}`}
               </p>

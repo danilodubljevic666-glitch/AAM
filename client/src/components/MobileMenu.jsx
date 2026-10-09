@@ -85,7 +85,7 @@ export default function MobileMenu({ open, onClose }) {
               key={c.slug}
               to={`/shop?kategorija=${c.slug}`}
               onClick={onClose}
-              className="border border-night-600 px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors active:border-bone active:bg-bone active:text-night"
+              className="flex min-h-11 items-center border border-night-600 px-4 font-mono text-xs uppercase tracking-widest transition-colors active:border-bone active:bg-bone active:text-night"
             >
               {c.name}
             </Link>
@@ -100,7 +100,7 @@ export default function MobileMenu({ open, onClose }) {
           different thoughts
         </p>
         {INSTAGRAM_URL && (
-          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="font-mono text-xs uppercase tracking-widest active:text-alarm">
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="-my-2 py-2 font-mono text-xs uppercase tracking-widest active:text-alarm">
             @{INSTAGRAM_HANDLE} ↗
           </a>
         )}

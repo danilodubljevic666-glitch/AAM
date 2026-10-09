@@ -6,10 +6,10 @@ import { useProducts } from '../context/ProductsContext.jsx'
 import { api } from '../lib/api.js'
 import Price from '../components/Price.jsx'
 import { supabase } from '../lib/supabase.js'
-import { usePageTitle } from '../lib/usePageTitle.js'
+import { useSeo } from '../lib/seo.js'
 
 export default function Admin() {
-  usePageTitle('Admin')
+  useSeo({ title: 'Admin', noIndex: true })
   const [session, setSession] = useState(undefined) // undefined = još proveravamo
 
   useEffect(() => {

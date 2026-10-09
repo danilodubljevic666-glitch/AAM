@@ -1,11 +1,11 @@
 // Privremena SVG ilustracija majice dok ne stignu prave fotografije
-export default function TeeGraphic({ color, ink, print, className = '' }) {
+export default function TeeGraphic({ color, ink, print, className = '', style }) {
   const lines = print.split('\n')
   const fontSize = lines.length > 1 ? 34 : 44
   const startY = 150 - ((lines.length - 1) * fontSize * 0.95) / 2
 
   return (
-    <svg viewBox="0 0 300 320" className={className} role="img" aria-label={`Majica — ${print.replace('\n', ' ')}`}>
+    <svg viewBox="0 0 300 320" className={className} style={style} role="img" aria-label={`Majica — ${print.replace('\n', ' ')}`}>
       <path
         d="M105 20 L60 35 L10 80 L40 125 L70 105 L70 300 L230 300 L230 105 L260 125 L290 80 L240 35 L195 20 Q150 55 105 20 Z"
         fill={color}

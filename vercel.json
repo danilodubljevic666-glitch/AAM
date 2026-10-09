@@ -5,6 +5,21 @@
   "outputDirectory": "client/dist",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
+
+    { "source": "/sitemap.xml", "destination": "/api" },
+
+    {
+      "source": "/shop/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|LinkedInBot|Slackbot|TelegramBot|Discordbot|SkypeUriPreview|redditbot|Embedly|Iframely|vkShare|Pinterestbot).*"
+        }
+      ],
+      "destination": "/api"
+    },
+
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

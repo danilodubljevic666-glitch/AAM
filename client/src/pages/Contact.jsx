@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { inputClass as input, labelClass as label } from '../components/formStyles.js'
 import Honeypot from '../components/Honeypot.jsx'
+import SplitText from '../components/SplitText.jsx'
 import { api } from '../lib/api.js'
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '../lib/site.js'
-import { usePageTitle } from '../lib/usePageTitle.js'
+import { useSeo } from '../lib/seo.js'
 
 
 const EMPTY = { name: '', email: '', message: '', website: '' }
@@ -19,7 +20,10 @@ function InstagramIcon({ className }) {
 }
 
 export default function Contact() {
-  usePageTitle('Kontakt')
+  useSeo({
+    title: 'Kontakt',
+    description: 'Pitanje o porudžbini, veličini ili saradnji? Piši nam — odgovaramo na email. Budni smo i u 02:00.',
+  })
   const [form, setForm] = useState(EMPTY)
   const [status, setStatus] = useState('idle') // idle | sending | done | error
   const [error, setError] = useState(null)
@@ -45,9 +49,11 @@ export default function Contact() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.3em] text-ash">Kontakt</p>
-      <h1 className="mt-6 animate-fade-up font-display [animation-delay:100ms] text-7xl uppercase sm:text-8xl">
-        Piši nam<span className="text-alarm">.</span>
-      </h1>
+      <SplitText
+        as="h1"
+        parts={[{ t: 'Piši nam' }, { t: '.', c: 'text-alarm' }]}
+        className="mt-6 block font-display text-7xl uppercase sm:text-8xl"
+      />
 
       <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
         <div className="min-w-0 animate-fade-up space-y-8 [animation-delay:200ms]">

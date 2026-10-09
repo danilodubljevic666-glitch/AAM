@@ -64,12 +64,18 @@ export function CartProvider({ children }) {
       )
 
     const removeItem = (id, size) => updateQty(id, size, 0)
+
+    // Vraća upravo uklonjenu stavku (dugme "Vrati" u obavještenju).
+    // Za razliku od addItem ne otvara korpu — korisnik je već tu gdje jeste.
+    const restoreItem = (line) =>
+      setItems((prev) => (prev.some((i) => sameLine(i, line.id, line.size)) ? prev : [...prev, line]))
+
     const clear = () => setItems([])
 
     const count = items.reduce((n, i) => n + i.qty, 0)
     const total = items.reduce((n, i) => n + i.qty * i.price, 0)
 
-    return { items, count, total, isOpen, setIsOpen, addItem, updateQty, removeItem, clear }
+    return { items, count, total, isOpen, setIsOpen, addItem, updateQty, removeItem, restoreItem, clear }
   }, [items, isOpen])
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

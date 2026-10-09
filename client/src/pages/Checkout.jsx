@@ -7,7 +7,7 @@ import { useCart } from '../context/CartContext.jsx'
 import { api } from '../lib/api.js'
 import { formatPrice } from '../lib/format.js'
 import { shippingFor } from '../lib/shipping.js'
-import { usePageTitle } from '../lib/usePageTitle.js'
+import { useSeo } from '../lib/seo.js'
 
 const CITIES = [
   'Podgorica', 'Nikšić', 'Bar', 'Budva', 'Herceg Novi', 'Bijelo Polje', 'Pljevlja', 'Cetinje', 'Kotor', 'Tivat',
@@ -27,7 +27,7 @@ function Field({ label, className = '', ...props }) {
 }
 
 export default function Checkout() {
-  usePageTitle('Narudžba')
+  useSeo({ title: 'Narudžba', noIndex: true })
   const { items, total, clear } = useCart()
   const [form, setForm] = useState(EMPTY)
   const [sending, setSending] = useState(false)
