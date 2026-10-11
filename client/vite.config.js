@@ -31,10 +31,12 @@ function siteUrlPlugin(siteUrl) {
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const siteUrl = (env.VITE_SITE_URL || 'https://aam.vercel.app').replace(/\/+$/, '')
+  const siteUrl = (env.VITE_SITE_URL || 'https://aamclothing.com').replace(/\/+$/, '')
 
   return {
     plugins: [react(), tailwindcss(), siteUrlPlugin(siteUrl)],
+    // ista adresa i za lib/seo.js, i kad VITE_SITE_URL nije postavljen
+    define: { 'import.meta.env.VITE_SITE_URL': JSON.stringify(siteUrl) },
     server: {
       port: 5173,
       proxy: {

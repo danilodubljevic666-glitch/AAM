@@ -15,14 +15,15 @@ const STATIC_ROUTES = [
 const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
 
-// Adresa sajta za canonical/og:url. SITE_URL je ako hoćeš da je fiksiraš;
-// bez nje se čita iz samog zahtjeva. Protokol se ne uzima iz req.protocol jer
-// zavisi od TRUST_PROXY — na internetu je uvijek https, lokalno http.
+// Adresa sajta za canonical/og:url — ista kao u client/vite.config.js.
+// Na internetu je uvijek pravi domen (i kad se otvori aam.vercel.app ili www.),
+// da Google ne vidi duplikate; lokalno se čita iz zahtjeva.
+const SITE_URL = (process.env.SITE_URL || process.env.VITE_SITE_URL || 'https://aamclothing.com').replace(/\/+$/, '')
+
 const siteUrl = (req) => {
-  if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/+$/, '')
   const host = req.get('host') ?? 'localhost'
   const lokalno = /^(localhost|127\.|\[::1\])/.test(host)
-  return `${lokalno ? 'http' : 'https'}://${host}`
+  return lokalno ? `http://${host}` : SITE_URL
 }
 
 async function activeProducts() {

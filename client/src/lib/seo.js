@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
 import { priceOf } from './pricing.js'
 
+// Uvijek pravi domen (vite.config.js), a ne adresa na kojoj je stranica otvorena —
+// da Google ne vidi aam.vercel.app i www. verziju kao duplikate.
+const SITE_URL = import.meta.env.VITE_SITE_URL
 const SITE_NAME = '2AM'
 const HOME_TITLE = '2AM — Same city, different thoughts'
 const HOME_DESCRIPTION =
@@ -22,7 +25,7 @@ export function useSeo({ title, description, image, noIndex = false } = {}) {
   useEffect(() => {
     const fullTitle = title ? `${title} — ${SITE_NAME}` : HOME_TITLE
     const desc = description || HOME_DESCRIPTION
-    const url = window.location.origin + window.location.pathname
+    const url = SITE_URL + window.location.pathname
 
 
     document.title = fullTitle
@@ -37,7 +40,7 @@ export function useSeo({ title, description, image, noIndex = false } = {}) {
     // Slika u pregledu linka: na stranici proizvoda njegova fotografija, inače opšta og.jpg.
     // Programi koji prave pregled (WhatsApp, Instagram) ne pokreću JavaScript — njima to
     // servira server (server/src/routes/seo.js); ovo je za Google i za dijeljenje iz browsera.
-    const origin = window.location.origin
+    const origin = SITE_URL
     const ogImage = image ? (image.startsWith('http') ? image : origin + image) : `${origin}/og.jpg`
     meta('og:image', 'property').content = ogImage
     meta('twitter:image').content = ogImage
@@ -58,7 +61,7 @@ export function useProductJsonLd(product) {
   useEffect(() => {
     if (!product) return
 
-    const origin = window.location.origin
+    const origin = SITE_URL
     const absolute = (src) => (src?.startsWith('http') ? src : `${origin}${src ?? ''}`)
 
     const breadcrumbs = {
@@ -84,7 +87,7 @@ export function useProductJsonLd(product) {
       brand: { '@type': 'Brand', name: SITE_NAME },
       offers: {
         '@type': 'Offer',
-        url: origin + window.location.pathname,
+        url: SITE_URL + window.location.pathname,
         priceCurrency: 'EUR',
         price: (priceOf(product) / 100).toFixed(2),
         availability: 'https://schema.org/InStock',

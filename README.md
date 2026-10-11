@@ -50,10 +50,12 @@ Svaka narudžba se čuva u Supabase tabeli `orders` i šalje na email preko [Ema
 ## Podešavanja koja ćeš možda htjeti da promijeniš
 
 ### 1. Adresa sajta (bitno za Google i za dijeljenje linkova)
-Kad dobiješ pravi domen, na Vercelu: **Settings → Environment Variables → `VITE_SITE_URL`**
-(npr. `https://2am.me`) pa **Redeploy**. Ta adresa ide u `canonical`, u pregled linka na
-Instagramu/WhatsAppu (`og:image`), u `robots.txt` i `sitemap.xml`. Dok se ne postavi,
-koristi se `https://aam.vercel.app`.
+Domen je `https://aamclothing.com` i upisan je u kod kao podrazumijevani
+(`client/vite.config.js` i `server/src/routes/seo.js`). Ta adresa ide u `canonical`, u pregled
+linka na Instagramu/WhatsAppu (`og:image`), u JSON-LD, u `robots.txt` i `sitemap.xml` — i kad
+se sajt otvori preko `aam.vercel.app` ili `www.`, da Google ne vidi duplikate.
+Ako se domen ikad promijeni: na Vercelu **Settings → Environment Variables → `VITE_SITE_URL`**
+pa **Redeploy**.
 
 ### 2. Tabela veličina
 `client/src/data/sizes.js` je namjerno **prazan**. Dok je prazan, dugme „Vodič za veličine"
@@ -136,7 +138,8 @@ Urađeno i provjereno:
 
 Kad sajt bude na pravom domenu:
 
-1. Postavi `VITE_SITE_URL` (vidi gore) i uradi **Redeploy**.
+1. Vercel → projekat → **Settings → Domains** → dodaj `aamclothing.com` (i `www.aamclothing.com`
+   kao preusmjerenje na njega), pa kod prodavca domena upiši DNS zapise koje Vercel pokaže.
 2. [Google Search Console](https://search.google.com/search-console) → dodaj domen →
    **Sitemaps** → upiši `sitemap.xml` → **Submit**.
 3. Pregled linka provjeri na [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
