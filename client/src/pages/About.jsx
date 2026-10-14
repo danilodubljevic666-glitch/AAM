@@ -13,9 +13,9 @@ const VALUES = [
 
 export default function About() {
   useSeo({
-    title: 'O nama',
+    title: 'O nama: brend iz Nikšića',
     description:
-      'Priča iza 2AM — brenda za noćne ptice. Teški pamuk, male serije i lokalna izrada, dizajnirano noću, nošeno danju.',
+      'AAM Clothing je brend iz Nikšića za noćne ptice. Teški pamuk, male serije i lokalna izrada. Dizajnirano noću, nošeno danju, dostava širom Crne Gore.',
   })
   return (
     <>
@@ -35,7 +35,7 @@ export default function About() {
           <div className="absolute inset-0 rounded-full bg-[radial-gradient(closest-side,rgba(255,59,47,0.14),transparent)]" />
           <img
             src="/images/2am-still-dreaming-back.webp"
-            alt="2AM Still Dreaming majica — leđa sa natpisom Same city, different thoughts"
+            alt="2AM Still Dreaming majica, leđa sa natpisom Same city, different thoughts"
             width="950"
             height="902"
             loading="lazy"
@@ -45,12 +45,12 @@ export default function About() {
 
         <Reveal className="space-y-6 text-lg text-ash">
           <p>
-            aam je brend za noćne ptice, kreativce, studente pred ispit i sve koji svoje najbolje ideje dobiju kad bi
-            trebalo da spavaju.
+            AAM Clothing je brend iz Nikšića za noćne ptice, kreativce, studente pred ispit i sve koji svoje najbolje
+            ideje dobiju kad bi trebalo da spavaju.
           </p>
           <p>
             Svaka majica je od teškog pamuka, sa printom koji traje. Male serije, lokalna izrada i dizajn koji se ne
-            ponavlja.
+            ponavlja. Dostava ide na adresu u bilo kom gradu u Crnoj Gori, a plaća se kuriru.
           </p>
           <blockquote className="border-l-2 border-alarm pl-6 font-display text-4xl uppercase leading-none text-bone sm:text-5xl">
             Same city, different thoughts.

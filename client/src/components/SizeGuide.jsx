@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { COLUMNS, SIZE_CHART } from '../data/sizes.js'
 
 const STEPS = [
-  ['Grudi', 'Izmjeri svoju omiljenu majicu položenu na sto — od šava do šava ispod rukava.'],
+  ['Grudi', 'Izmjeri svoju omiljenu majicu položenu na sto, od šava do šava ispod rukava.'],
   ['Dužina', 'Od najviše tačke ramena pravo nadolje do donje ivice.'],
   ['Rukav', 'Od ramenog šava do kraja rukava.'],
 ]
@@ -77,7 +77,7 @@ export default function SizeGuide({ open, onClose, category }) {
                   <tr key={r.size} className="border-b border-night-600/60">
                     <th scope="row" className="py-3 pr-4 font-display text-xl uppercase">{r.size}</th>
                     {COLUMNS.map((c) => (
-                      <td key={c.key} className="py-3 pr-4">{r[c.key] ? `${r[c.key]} cm` : '—'}</td>
+                      <td key={c.key} className="py-3 pr-4">{r[c.key] ? `${r[c.key]} cm` : ''}</td>
                     ))}
                   </tr>
                 ))}
@@ -109,7 +109,7 @@ export default function SizeGuide({ open, onClose, category }) {
           <Link to="/kontakt" onClick={onClose} className="text-bone underline underline-offset-4 hover:text-alarm">
             Piši nam
           </Link>{' '}
-          — reći ćemo ti tačnu mjeru za komad koji te zanima.
+          i reći ćemo ti tačnu mjeru za komad koji te zanima.
         </p>
       </div>
     </div>

@@ -31,7 +31,8 @@ function siteUrlPlugin(siteUrl) {
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const siteUrl = (env.VITE_SITE_URL || 'https://aamclothing.com').replace(/\/+$/, '')
+  // sa www., jer Vercel aamclothing.com preusmjerava na www.aamclothing.com
+  const siteUrl = (env.VITE_SITE_URL || 'https://www.aamclothing.com').replace(/\/+$/, '')
 
   return {
     plugins: [react(), tailwindcss(), siteUrlPlugin(siteUrl)],

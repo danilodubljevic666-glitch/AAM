@@ -174,7 +174,7 @@ function Dashboard({ session }) {
       ) : products.length === 0 ? (
         <div className="mt-10 border-y border-night-600 py-20 text-center">
           <p className="font-display text-4xl uppercase">Još nema majica</p>
-          <p className="mt-3 text-ash">Dodaj prvu — pojaviće se u shopu čim je sačuvaš.</p>
+          <p className="mt-3 text-ash">Dodaj prvu i pojaviće se u shopu čim je sačuvaš.</p>
         </div>
       ) : (
         <ul className="mt-10 divide-y divide-night-600 border-y border-night-600">

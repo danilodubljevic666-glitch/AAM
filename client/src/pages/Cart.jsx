@@ -36,7 +36,7 @@ export default function Cart() {
           <h2 className="font-mono text-xs uppercase tracking-widest text-ash">Pregled</h2>
           <dl className="mt-6 space-y-3 font-mono text-sm">
             <div className="flex justify-between"><dt className="text-ash">Međuzbir</dt><dd>{formatPrice(total)}</dd></div>
-            <div className="flex justify-between"><dt className="text-ash">Dostava</dt><dd>{shipping ? formatPrice(shipping) : 'Besplatno'}</dd></div>
+            <div className="flex justify-between"><dt className="text-ash">Dostava</dt><dd>{formatPrice(shipping)}</dd></div>
             <div className="flex justify-between border-t border-night-600 pt-3 text-base"><dt>Ukupno</dt><dd>{formatPrice(total + shipping)}</dd></div>
           </dl>
           <Link

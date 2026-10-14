@@ -22,7 +22,8 @@ function InstagramIcon({ className }) {
 export default function Contact() {
   useSeo({
     title: 'Kontakt',
-    description: 'Pitanje o porudžbini, veličini ili saradnji? Piši nam — odgovaramo na email. Budni smo i u 02:00.',
+    description:
+      'Kontakt za AAM Clothing iz Nikšića. Pitanje o porudžbini, veličini ili saradnji? Piši nam i odgovaramo na email. Budni smo i u 02:00.',
   })
   const [form, setForm] = useState(EMPTY)
   const [status, setStatus] = useState('idle') // idle | sending | done | error
@@ -58,8 +59,8 @@ export default function Contact() {
       <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
         <div className="min-w-0 animate-fade-up space-y-8 [animation-delay:200ms]">
           <p className="max-w-md text-lg text-ash">
-            Pitanje o porudžbini, veličini ili saradnji? Pošalji poruku — odgovaramo na email koji ostaviš. Budni smo i u
-            02:00.
+            Pitanje o porudžbini, veličini ili saradnji? Pošalji poruku i odgovaramo na email koji ostaviš. Budni smo i
+            u 02:00.
           </p>
 
           <div className="border border-night-600 bg-night-800 p-6">

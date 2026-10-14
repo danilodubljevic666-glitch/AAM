@@ -25,9 +25,9 @@ export default function Shop() {
   const active = CATEGORIES.find((c) => c.slug === params.get('kategorija')) ?? null
   const [sort, setSort] = useState('default')
   useSeo({
-    title: active ? active.name : 'Shop',
+    title: active ? active.name : 'Majice, duksevi i kačketi',
     description:
-      'Cijela 2AM kolekcija — majice, duksevi, kačketi i kompleti od teškog pamuka. Plaćanje pouzećem, dostava širom Crne Gore.',
+      'Cijela AAM Clothing kolekcija: 2AM majice, duksevi, kačketi i kompleti od teškog pamuka. Plaćanje pouzećem, dostava u Nikšić, Podgoricu i cijelu Crnu Goru.',
   })
 
   const filters = useMemo(
@@ -50,8 +50,16 @@ export default function Shop() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.3em] text-ash">Kolekcija 01</p>
-      <SplitText as="h1" text="Shop" className="mt-2 block font-display text-7xl uppercase sm:text-8xl" />
+      <p className="flex animate-fade-up items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-ash">
+        <span className="text-alarm">01</span>
+        <span aria-hidden="true" className="text-night-600">/</span>
+        Kolekcija
+      </p>
+      <SplitText as="h1" text="Shop" className="mt-2 block font-display text-7xl uppercase sm:text-9xl" />
+      <p className="mt-4 max-w-xl animate-fade-up text-ash [animation-delay:100ms]">
+        Kolekcija AAM Clothing iz Nikšića: majice, duksevi i kačketi od teškog pamuka. Dostava na adresu bilo gdje u
+        Crnoj Gori, plaćanje pouzećem.
+      </p>
 
       {status === 'ready' && products.length === 0 ? (
         <div className="mt-10 animate-fade-up border-y border-night-600 py-24 text-center [animation-delay:200ms]">
@@ -69,7 +77,8 @@ export default function Shop() {
         <>
           <div className="mt-10 flex animate-fade-up flex-wrap items-center justify-between gap-4 border-y border-night-600 py-4 [animation-delay:200ms]">
             <div className="flex flex-wrap gap-2" role="group" aria-label="Filter po vrsti proizvoda">
-              {filters.map((f) => {
+              {/* prazne kategorije se ne nude (osim ako je neko baš na njoj došao preko linka) */}
+              {filters.filter((f) => status !== 'ready' || !f.slug || f.count > 0 || f.slug === active?.slug).map((f) => {
                 const selected = (active?.slug ?? null) === f.slug
                 return (
                   <button
@@ -118,8 +127,8 @@ export default function Shop() {
               <p className="mt-6 font-mono text-xs uppercase text-ash">
                 {status === 'loading' ? 'Učitavanje…' : `${visible.length} ${countLabel(visible.length)}`}
               </p>
-              <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-3">
-                {status === 'loading' ? <SkeletonCards count={6} /> : visible.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+              <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
+                {status === 'loading' ? <SkeletonCards count={8} /> : visible.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
               </div>
             </>
           )}

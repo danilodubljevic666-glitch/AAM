@@ -40,7 +40,7 @@ export default function CartLine({ item }) {
             <button
               onClick={() => updateQty(item.id, item.size, item.qty - 1)}
               className="px-3 py-1.5 transition-colors hover:text-alarm active:scale-90"
-              aria-label={`Smanji količinu — ${item.name}`}
+              aria-label={`Smanji količinu: ${item.name}`}
             >
               −
             </button>
@@ -48,7 +48,7 @@ export default function CartLine({ item }) {
             <button
               onClick={() => updateQty(item.id, item.size, item.qty + 1)}
               className="px-3 py-1.5 transition-colors hover:text-alarm active:scale-90"
-              aria-label={`Povećaj količinu — ${item.name}`}
+              aria-label={`Povećaj količinu: ${item.name}`}
             >
               +
             </button>

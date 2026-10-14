@@ -18,7 +18,7 @@ export const reviews = [
     name: 'Nikola',
     city: 'Herceg Novi',
     rating: 5,
-    text: 'Minimalistički print, ništa napadno — a opet me svi pitaju odakle mi majica.',
+    text: 'Minimalistički print, ništa napadno, a opet me svi pitaju odakle mi majica.',
   },
   {
     name: 'Ana',

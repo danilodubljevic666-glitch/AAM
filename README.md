@@ -50,10 +50,16 @@ Svaka narudžba se čuva u Supabase tabeli `orders` i šalje na email preko [Ema
 ## Podešavanja koja ćeš možda htjeti da promijeniš
 
 ### 1. Adresa sajta (bitno za Google i za dijeljenje linkova)
-Domen je `https://aamclothing.com` i upisan je u kod kao podrazumijevani
-(`client/vite.config.js` i `server/src/routes/seo.js`). Ta adresa ide u `canonical`, u pregled
-linka na Instagramu/WhatsAppu (`og:image`), u JSON-LD, u `robots.txt` i `sitemap.xml` — i kad
-se sajt otvori preko `aam.vercel.app` ili `www.`, da Google ne vidi duplikate.
+Domen je `https://www.aamclothing.com` (sa www., jer Vercel `aamclothing.com` preusmjerava
+na www.) i upisan je u kod kao podrazumijevani (`client/vite.config.js` i
+`server/src/routes/seo.js`). Ta adresa ide u `canonical`, u pregled linka na
+Instagramu/WhatsAppu (`og:image`), u JSON-LD, u `robots.txt` i `sitemap.xml`, i kad se sajt
+otvori preko `aam.vercel.app` ili adrese bez www., da Google ne vidi duplikate.
+Ako na Vercelu ikad okreneš preusmjerenje (www. → bez www.), promijeni i ovu adresu.
+
+Za pretragu brend se zove **AAM Clothing** (ljudi kucaju "aam clothing", "aamclothing"),
+sa gradom Nikšićem: to ime i grad stoje u naslovima, opisima, JSON-LD-u (`index.html`),
+H1 na početnoj i u footeru. Naslovi i opisi su u `client/index.html` i `client/src/lib/seo.js`.
 Ako se domen ikad promijeni: na Vercelu **Settings → Environment Variables → `VITE_SITE_URL`**
 pa **Redeploy**.
 
@@ -138,8 +144,8 @@ Urađeno i provjereno:
 
 Kad sajt bude na pravom domenu:
 
-1. Vercel → projekat → **Settings → Domains** → dodaj `aamclothing.com` (i `www.aamclothing.com`
-   kao preusmjerenje na njega), pa kod prodavca domena upiši DNS zapise koje Vercel pokaže.
+1. Vercel → projekat → **Settings → Domains** → `www.aamclothing.com` je glavni, a
+   `aamclothing.com` preusmjerava na njega (tako je i u kodu).
 2. [Google Search Console](https://search.google.com/search-console) → dodaj domen →
    **Sitemaps** → upiši `sitemap.xml` → **Submit**.
 3. Pregled linka provjeri na [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)

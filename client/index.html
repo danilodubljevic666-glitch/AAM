@@ -4,13 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>2AM — Same city, different thoughts</title>
+    <title>AAM Clothing Nikšić | 2AM majice i duksevi, Crna Gora</title>
     <meta
       name="description"
-      content="2AM — majice za one koji su budni kad svi drugi spavaju. Teški pamuk, minimalistički printovi, dostava širom Crne Gore."
+      content="AAM Clothing iz Nikšića. 2AM majice, duksevi i kačketi od teškog pamuka, u malim serijama. Plaćanje pouzećem, dostava širom Crne Gore za 2 do 3 radna dana."
     />
     <link rel="canonical" href="__SITE_URL__/" />
     <meta name="theme-color" content="#0b0b0d" />
+    <meta name="geo.region" content="ME-12" />
+    <meta name="geo.placename" content="Nikšić" />
 
     <!-- Ikonice i instaliranje na telefon -->
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -21,23 +23,23 @@
 
     <!-- Kako link izgleda kad se podijeli (Instagram, WhatsApp, Viber, Facebook) -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="2AM" />
+    <meta property="og:site_name" content="AAM Clothing" />
     <meta property="og:locale" content="sr_ME" />
-    <meta property="og:title" content="2AM — Same city, different thoughts" />
+    <meta property="og:title" content="AAM Clothing Nikšić | 2AM majice i duksevi, Crna Gora" />
     <meta
       property="og:description"
-      content="Majice za one koji su budni kad svi drugi spavaju. Teški pamuk, jaki printovi, dostava širom Crne Gore."
+      content="Majice za one koji su budni kad svi drugi spavaju. AAM Clothing iz Nikšića, dostava širom Crne Gore."
     />
     <meta property="og:url" content="__SITE_URL__/" />
     <meta property="og:image" content="__SITE_URL__/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="2AM — Still Dreaming majica" />
+    <meta property="og:image:alt" content="2AM Still Dreaming majica, AAM Clothing" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="2AM — Same city, different thoughts" />
+    <meta name="twitter:title" content="AAM Clothing Nikšić | 2AM majice i duksevi, Crna Gora" />
     <meta
       name="twitter:description"
-      content="Majice za one koji su budni kad svi drugi spavaju. Teški pamuk, jaki printovi, dostava širom Crne Gore."
+      content="Majice za one koji su budni kad svi drugi spavaju. AAM Clothing iz Nikšića, dostava širom Crne Gore."
     />
     <meta name="twitter:image" content="__SITE_URL__/og.jpg" />
 
@@ -50,39 +52,49 @@
     />
     <link rel="preload" as="image" href="/images/2am-still-dreaming-front.webp" fetchpriority="high" />
 
-    <!-- Google: ko smo, šta prodajemo -->
+    <!-- Google: ko smo, odakle smo i šta prodajemo. Online prodavnica iz Nikšića
+         (bez ulice, jer nema fizičke radnje), dostava po cijeloj Crnoj Gori. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "ClothingStore",
-        "name": "2AM",
-        "alternateName": "aam",
-        "description": "Majice za one koji su budni kad svi drugi spavaju. Teški pamuk, jaki printovi, male serije.",
+        "@type": "OnlineStore",
+        "@id": "__SITE_URL__/#store",
+        "name": "AAM Clothing",
+        "alternateName": ["aamclothing", "aam", "2AM"],
+        "description": "Brend odjeće iz Nikšića. 2AM majice, duksevi i kačketi od teškog pamuka u malim serijama, sa dostavom širom Crne Gore.",
         "url": "__SITE_URL__/",
         "logo": "__SITE_URL__/icon-512.png",
         "image": "__SITE_URL__/og.jpg",
         "slogan": "Same city, different thoughts",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Nikšić",
+          "postalCode": "81400",
+          "addressCountry": "ME"
+        },
         "areaServed": { "@type": "Country", "name": "Crna Gora" },
+        "currenciesAccepted": "EUR",
+        "paymentAccepted": "Gotovina pouzećem",
         "sameAs": ["https://www.instagram.com/aam.officialbusiness/"]
       }
     </script>
 
+    <!-- Ime sajta koje Google piše iznad linka u rezultatima pretrage -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "2AM",
+        "name": "AAM Clothing",
+        "alternateName": ["aamclothing", "2AM"],
         "url": "__SITE_URL__/",
         "inLanguage": "sr-Latn-ME",
-        "publisher": { "@type": "Organization", "name": "2AM" }
+        "publisher": { "@id": "__SITE_URL__/#store" }
       }
     </script>
 
-    <!-- ——————————————————————————————————————————————————————————
-         PRELOADER — ugrađen u HTML (ne čeka ni CSS ni JS bundle),
+    <!-- PRELOADER: ugrađen u HTML (ne čeka ni CSS ni JS bundle),
          pa se brendirani ekran vidi od prvog iscrtavanja.
-         Sklanja ga src/lib/preloader.js pozivom window.__aamReady().
-         —————————————————————————————————————————————————————————— -->
+         Sklanja ga src/lib/preloader.js pozivom window.__aamReady(). -->
     <style>
       .aam-loading,
       .aam-loading body {
@@ -106,7 +118,7 @@
         opacity: 0;
         visibility: hidden;
       }
-      /* crvena svjetlosna mrlja — isti motiv kao hero */
+      /* crvena svjetlosna mrlja, isti motiv kao hero */
       #preloader::before {
         content: "";
         position: absolute;

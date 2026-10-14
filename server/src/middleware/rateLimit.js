@@ -20,4 +20,4 @@ function perHour(limit, message) {
 }
 
 export const contactLimit = perHour(3, 'Poslao si previše poruka u kratkom roku.')
-export const ordersLimit = perHour(5, 'Previše narudžbi u kratkom roku — ako je nešto pošlo naopako, piši nam preko kontakt forme.')
+export const ordersLimit = perHour(5, 'Previše narudžbi u kratkom roku. Ako je nešto pošlo naopako, piši nam preko kontakt forme.')

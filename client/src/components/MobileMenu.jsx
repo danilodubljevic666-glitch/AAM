@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { useProducts } from '../context/ProductsContext.jsx'
 import { CATEGORIES } from '../lib/categories.js'
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '../lib/site.js'
 
@@ -11,7 +12,7 @@ const LINKS = [
 ]
 
 // Krug se širi iz ugla u kom je dugme menija (gore desno)
-const ORIGIN = 'calc(100% - 2.25rem) 2.1rem'
+const ORIGIN = 'calc(100% - 2.25rem) 4.1rem' // 2rem crvena traka + pola navigacije
 
 // Kaskadni ulazak stavki pri otvaranju; pri zatvaranju sve nestaje odjednom.
 // extra = ostale klase elementa (spajaju se, da ih spread ne pregazi)
@@ -23,6 +24,10 @@ const enter = (open, i, extra = '') => ({
 // Meni preko čitavog ekrana — samo na telefonu (na većim ekranima linkovi su u navbaru)
 export default function MobileMenu({ open, onClose }) {
   const firstLinkRef = useRef(null)
+  // Samo kategorije u kojima ima nečega (dok se katalog učitava, sve)
+  const { products, status } = useProducts()
+  const categories =
+    status === 'ready' ? CATEGORIES.filter((c) => products.some((p) => p.category === c.name)) : CATEGORIES
 
   useEffect(() => {
     if (!open) return
@@ -51,7 +56,7 @@ export default function MobileMenu({ open, onClose }) {
       aria-modal="true"
       aria-label="Meni"
       inert={!open}
-      className="fixed inset-0 z-[35] flex flex-col overflow-y-auto bg-night px-6 pb-8 pt-28 transition-[clip-path] duration-700 ease-[cubic-bezier(0.7,0,0.2,1)] md:hidden"
+      className="fixed inset-0 z-[35] flex flex-col overflow-y-auto overflow-x-hidden bg-night px-6 pb-8 pt-36 transition-[clip-path] duration-700 ease-[cubic-bezier(0.7,0,0.2,1)] md:hidden"
       style={{ clipPath: `circle(${open ? '150%' : '0%'} at ${ORIGIN})` }}
     >
       <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-alarm/15 blur-[100px]" />
@@ -80,7 +85,7 @@ export default function MobileMenu({ open, onClose }) {
       <div {...enter(open, LINKS.length, 'relative mt-10')}>
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ash">Kategorije</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <Link
               key={c.slug}
               to={`/shop?kategorija=${c.slug}`}

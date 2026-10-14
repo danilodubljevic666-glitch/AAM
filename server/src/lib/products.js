@@ -6,7 +6,7 @@ export const IMAGE_BUCKET = 'product-images'
 
 // Upis kolone koja još ne postoji u bazi (nije pokrenut setup.sql)
 export const missingColumn = (error) => error?.code === 'PGRST204' || error?.code === '42703'
-export const MISSING_COLUMN_MESSAGE = 'Baza nije ažurirana — u Supabase SQL Editoru pokreni server/db/setup.sql.'
+export const MISSING_COLUMN_MESSAGE = 'Baza nije ažurirana. U Supabase SQL Editoru pokreni server/db/setup.sql.'
 
 // Moraju da se poklapaju sa client/src/lib/categories.js i admin formom
 const CATEGORIES = ['Majice', 'Duksevi', 'Kačketi', 'Komplet']

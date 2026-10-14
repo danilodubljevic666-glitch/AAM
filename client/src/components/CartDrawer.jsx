@@ -107,7 +107,7 @@ export default function CartDrawer() {
                 </div>
                 <div className="flex justify-between">
                   <dt className="uppercase text-ash">Dostava</dt>
-                  <dd>{shipping ? formatPrice(shipping) : 'Besplatno'}</dd>
+                  <dd>{formatPrice(shipping)}</dd>
                 </div>
                 <div className="flex justify-between border-t border-night-600 pt-2 text-base">
                   <dt className="uppercase">Ukupno</dt>

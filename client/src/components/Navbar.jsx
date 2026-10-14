@@ -3,6 +3,10 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useCart } from '../context/CartContext.jsx'
 import MobileMenu from './MobileMenu.jsx'
 
+// Gornja traka: ono što kupca najviše zanima, prije nego što išta klikne.
+// Na telefonu ostaje samo prva poruka, da stane u jedan red.
+const PERKS = ['Dostava širom Crne Gore', 'Plaćanje pouzećem', 'Slanje u roku od 24h']
+
 const links = [
   { to: '/shop', label: 'Shop' },
   { to: '/o-nama', label: 'O nama' },
@@ -64,6 +68,16 @@ export default function Navbar() {
           hide ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
+        <div className="bg-alarm text-night">
+          <ul className="mx-auto flex h-8 max-w-7xl items-center justify-center gap-4 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] sm:text-[11px]">
+            {PERKS.map((perk, i) => (
+              <li key={perk} className={`items-center gap-4 ${i === 0 ? 'flex' : i === 1 ? 'hidden sm:flex' : 'hidden md:flex'}`}>
+                {i > 0 && <span aria-hidden="true">·</span>}
+                {perk}
+              </li>
+            ))}
+          </ul>
+        </div>
         <div
           className={`border-b backdrop-blur transition-colors duration-300 ${
             scrolled ? 'border-night-600 bg-night/90' : 'border-night-600/50 bg-night/70'
@@ -74,10 +88,10 @@ export default function Navbar() {
               scrolled ? 'py-3' : 'py-4'
             }`}
           >
-            <Link to="/" onClick={closeMenu} aria-label="2AM — početna" className="transition-opacity hover:opacity-70">
+            <Link to="/" onClick={closeMenu} aria-label="AAM Clothing, početna" className="transition-opacity hover:opacity-70">
               <img
                 src="/brand/logo-mark.webp"
-                alt="2AM"
+                alt="AAM Clothing 2AM logo"
                 width="491"
                 height="120"
                 className={`w-auto transition-[height] duration-300 ${scrolled ? 'h-6' : 'h-7'}`}

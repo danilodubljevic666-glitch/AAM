@@ -24,7 +24,10 @@
   --animate-blink: blink 1s steps(1) infinite;
   --animate-fade-up: fade-up 0.8s var(--ease-expo) both;
   --animate-fade-in: fade-in 0.6s ease-out both;
-  --animate-page-in: page-in 0.5s var(--ease-expo) both;
+  /* backwards, ne both: kad se završi, animacija se skida sa <main>. Zadržan filter/transform
+     (čak i blur(0)) bi <main> pretvorio u "okvir" za position: fixed, pa bi vodič za veličine
+     i traka "Dodaj u korpu" ostali zarobljeni u stranici umjesto na ekranu */
+  --animate-page-in: page-in 0.5s var(--ease-expo) backwards;
   --animate-slide-in-left: slide-in-left 1s var(--ease-expo) both;
   --animate-slide-in-right: slide-in-right 1s var(--ease-expo) both;
   --animate-float: float 6s ease-in-out infinite;
@@ -216,6 +219,46 @@ body::after {
   animation: var(--animate-shimmer);
 }
 
+/* Traka sa tekstom koja beskonačno klizi — components/Marquee.jsx.
+   Sadržaj je dvaput zaredom, pa pomak za tačno pola širine neprimjetno počinje ispočetka. */
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+.marquee {
+  overflow: hidden;
+  /* tekst izranja i nestaje na ivicama umjesto da bude odsječen */
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-speed, 30s) linear infinite;
+}
+.marquee[data-reverse] .marquee-track { animation-direction: reverse; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* Slova samo sa konturom (veliki brojevi, Instagram traka, natpis u footeru) */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: var(--outline-w, 1.5px) var(--outline-c, var(--color-bone));
+  transition: color 0.4s var(--ease-expo);
+}
+.text-outline-alarm { --outline-c: var(--color-alarm); }
+.text-outline-dim { --outline-c: var(--color-night-600); }
+/* u linku: kontura se na hover popuni */
+.group:hover .text-outline-fill { color: var(--color-bone); }
+
+/* Vodoravno listanje prstom (recenzije na telefonu) bez trake za skrol */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Dok je na telefonu vidljiva traka "Dodaj u korpu" (pages/Product.jsx), dugme "nazad na vrh"
+   ide iznad nje, a dno stranice dobija prostor da ga traka ne prekrije */
+@media (max-width: 63.99rem) {
+  body[data-sticky-cta] { padding-bottom: 5rem; }
+  body[data-sticky-cta] .back-to-top { bottom: 6.5rem; }
+}
+
 /* Paralaksa u heru — JS upisuje --px/--py, CSS ih samo koristi */
 .parallax {
   --px: 0;
@@ -246,9 +289,11 @@ body::after {
   display: inline-block;
   overflow: hidden;
   vertical-align: top;
-  /* mjesta za repove slova (g, j, p) da ih prozor ne odsiječe */
+  /* mjesta za repove slova (g, j, p) i kvačice velikih slova (Č, Ć, Š, Ž) da ih prozor ne odsiječe */
   padding-bottom: 0.14em;
   margin-bottom: -0.14em;
+  padding-top: 0.2em;
+  margin-top: -0.2em;
 }
 .split-char {
   display: inline-block;

@@ -31,7 +31,7 @@ export default function BackToTop() {
       onClick={toTop}
       aria-label="Nazad na vrh stranice"
       inert={!visible}
-      className={`group fixed bottom-5 right-5 z-30 grid h-14 w-14 place-items-center rounded-full bg-night/90 backdrop-blur transition-[opacity,translate,scale] duration-300 hover:text-alarm active:scale-90 sm:bottom-8 sm:right-8 ${
+      className={`back-to-top group fixed bottom-5 right-5 z-30 grid h-14 w-14 place-items-center rounded-full bg-night/90 backdrop-blur transition-[opacity,translate,scale,bottom] duration-300 hover:text-alarm active:scale-90 sm:bottom-8 sm:right-8 ${
         visible ? 'opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
       }`}
     >

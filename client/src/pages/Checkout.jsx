@@ -120,7 +120,7 @@ export default function Checkout() {
 
           <div className="border border-night-600 p-5">
             <p className={labelClass}>Plaćanje</p>
-            <p className="mt-2">Pouzećem — plaćaš kuriru gotovinom pri preuzimanju paketa.</p>
+            <p className="mt-2">Pouzećem, gotovinom kuriru pri preuzimanju paketa.</p>
           </div>
         </div>
 
@@ -144,7 +144,7 @@ export default function Checkout() {
           </ul>
           <dl className="mt-4 space-y-3 border-t border-night-600 pt-4 font-mono text-sm">
             <div className="flex justify-between"><dt className="text-ash">Međuzbir</dt><dd>{formatPrice(total)}</dd></div>
-            <div className="flex justify-between"><dt className="text-ash">Dostava</dt><dd>{shipping ? formatPrice(shipping) : 'Besplatno'}</dd></div>
+            <div className="flex justify-between"><dt className="text-ash">Dostava</dt><dd>{formatPrice(shipping)}</dd></div>
             <div className="flex justify-between border-t border-night-600 pt-3 text-base"><dt>Ukupno</dt><dd>{formatPrice(total + shipping)}</dd></div>
           </dl>
 

@@ -16,8 +16,8 @@ function emailContact({ name, email, message }) {
     from_email: email,
     reply_to: email,
     message,
-    subject: `Nova poruka sa sajta — ${name}`,
-    title: `Nova poruka sa sajta — ${name}`,
+    subject: `Nova poruka sa sajta: ${name}`,
+    title: `Nova poruka sa sajta: ${name}`,
     time: new Date().toLocaleString('sr-Latn-ME', { timeZone: 'Europe/Podgorica' }),
   })
 }

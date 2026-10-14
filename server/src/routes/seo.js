@@ -16,9 +16,12 @@ const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
 
 // Adresa sajta za canonical/og:url — ista kao u client/vite.config.js.
-// Na internetu je uvijek pravi domen (i kad se otvori aam.vercel.app ili www.),
+// Na internetu je uvijek pravi domen (i kad se otvori aam.vercel.app ili adresa bez www.),
 // da Google ne vidi duplikate; lokalno se čita iz zahtjeva.
-const SITE_URL = (process.env.SITE_URL || process.env.VITE_SITE_URL || 'https://aamclothing.com').replace(/\/+$/, '')
+const SITE_URL = (process.env.SITE_URL || process.env.VITE_SITE_URL || 'https://www.aamclothing.com').replace(/\/+$/, '')
+
+// Isti naslov kao u client/index.html i client/src/lib/seo.js
+const HOME_TITLE = 'AAM Clothing Nikšić | 2AM majice i duksevi, Crna Gora'
 
 const siteUrl = (req) => {
   const host = req.get('host') ?? 'localhost'
@@ -105,13 +108,14 @@ router.get('/shop/:slug', async (req, res, next) => {
     }
 
     // Majice nema (ili baza ne radi) — vrati opšti pregled, nikad grešku
-    const naslov = product ? `${product.name} — 2AM` : '2AM — Same city, different thoughts'
+    const naslov = product ? `${product.name} | AAM Clothing` : HOME_TITLE
     const cijena = product ? (product.sale_price ?? product.price) : null
-    // Neki proizvodi nemaju upisan opis — tad ide rečenica o brendu, da pregled ne počne cijenom
-    const opisProizvoda = product?.description?.trim() || 'Teški pamuk, jaki printovi, male serije.'
+    // Neki proizvodi nemaju upisan opis; tad ide rečenica o brendu, da pregled ne počne cijenom
+    const opisProizvoda =
+      product?.description?.trim() || `${product?.name}, AAM Clothing iz Nikšića. Male serije, dizajn koji se ne ponavlja.`
     const opis = product
       ? `${opisProizvoda} ${cijena ? `Cijena: ${EUR.format(cijena / 100)}.` : ''} Plaćanje pouzećem, dostava širom Crne Gore.`.replace(/\s+/g, ' ').trim()
-      : 'Majice za one koji su budni kad svi drugi spavaju. Teški pamuk, jaki printovi, dostava širom Crne Gore.'
+      : 'Majice za one koji su budni kad svi drugi spavaju. AAM Clothing iz Nikšića, dostava širom Crne Gore.'
 
     const prvaSlika = product?.images?.[0]
     const slika = prvaSlika ? (prvaSlika.startsWith('http') ? prvaSlika : base + prvaSlika) : `${base}/og.jpg`
@@ -124,13 +128,13 @@ router.get('/shop/:slug', async (req, res, next) => {
 <meta name="description" content="${esc(opis)}">
 <link rel="canonical" href="${esc(url)}">
 <meta property="og:type" content="${product ? 'product' : 'website'}">
-<meta property="og:site_name" content="2AM">
+<meta property="og:site_name" content="AAM Clothing">
 <meta property="og:locale" content="sr_ME">
 <meta property="og:title" content="${esc(naslov)}">
 <meta property="og:description" content="${esc(opis)}">
 <meta property="og:url" content="${esc(url)}">
 <meta property="og:image" content="${esc(slika)}">
-<meta property="og:image:alt" content="${esc(product?.name ?? '2AM')}">
+<meta property="og:image:alt" content="${esc(product?.name ?? 'AAM Clothing')}">
 ${cijena ? `<meta property="product:price:amount" content="${(cijena / 100).toFixed(2)}">
 <meta property="product:price:currency" content="EUR">
 <meta property="product:availability" content="in stock">` : ''}
@@ -140,8 +144,8 @@ ${cijena ? `<meta property="product:price:amount" content="${(cijena / 100).toFi
 <meta name="twitter:image" content="${esc(slika)}">
 </head>
 <body style="background:#0b0b0d;color:#f2efe8;font-family:system-ui,sans-serif;text-align:center;padding:3rem 1.5rem">
-<img src="${esc(slika)}" alt="${esc(product?.name ?? '2AM')}" width="320" style="max-width:100%;height:auto">
-<h1>${esc(product?.name ?? '2AM')}</h1>
+<img src="${esc(slika)}" alt="${esc(product?.name ?? 'AAM Clothing')}" width="320" style="max-width:100%;height:auto">
+<h1>${esc(product?.name ?? 'AAM Clothing')}</h1>
 ${cijena ? `<p>${esc(EUR.format(cijena / 100))}</p>` : ''}
 <p>${esc(opis)}</p>
 <p><a href="${esc(url)}" style="color:#ff3b2f">Otvori na sajtu</a></p>

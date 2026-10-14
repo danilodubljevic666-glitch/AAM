@@ -7,7 +7,7 @@ import { isEmail } from '../lib/validate.js'
 const router = Router()
 
 // Iznosi u centima — moraju da se poklapaju sa client/src/lib/shipping.js
-const FREE_SHIPPING = 5000 // 50 €
+// Dostava se naplaćuje uvijek, bez obzira na iznos korpe (besplatne dostave nema).
 const SHIPPING_COST = 390 // 3,90 €
 
 const PHONE_RE = /^\+?[\d\s/()-]{6,20}$/
@@ -55,7 +55,7 @@ async function saveOrder(order) {
 }
 
 function emailOrder(order) {
-  const lines = order.items.map((l) => `${l.qty} × ${l.name} (${l.size}) — ${eur(l.price * l.qty)}`)
+  const lines = order.items.map((l) => `${l.qty} × ${l.name} (${l.size}): ${eur(l.price * l.qty)}`)
   return sendOrderEmail({
     reference: order.reference,
     customer_name: `${order.first_name} ${order.last_name}`,
@@ -66,7 +66,7 @@ function emailOrder(order) {
     items: lines.join('\n'),
     items_html: lines.map(escapeHtml).join('<br>'), // u EmailJS šablonu: {{{items_html}}}
     subtotal: eur(order.subtotal),
-    shipping: order.shipping ? eur(order.shipping) : 'Besplatna',
+    shipping: eur(order.shipping),
     total: eur(order.total),
     reply_to: order.email,
   })
@@ -101,7 +101,7 @@ router.post('/', async (req, res, next) => {
       lines.push({ id: p.id, name: p.name, size: i.size, qty: i.qty, price: p.sale_price ?? p.price })
     }
     const subtotal = lines.reduce((n, l) => n + l.price * l.qty, 0)
-    const shipping = subtotal >= FREE_SHIPPING ? 0 : SHIPPING_COST
+    const shipping = SHIPPING_COST
     const order = { reference: newReference(), ...customer, items: lines, subtotal, shipping, total: subtotal + shipping }
 
     // Čuvanje u bazi i email idu paralelno; dovoljno je da uspe jedno od dvoje da narudžba ne propadne

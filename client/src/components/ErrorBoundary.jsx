@@ -23,7 +23,7 @@ export default class ErrorBoundary extends Component {
           02<span className="text-alarm">:</span>00
         </h1>
         <p className="mt-6 text-ash">
-          Izvini — ova stranica se nije učitala kako treba. Osvježi je, pa bi trebalo da proradi.
+          Izvini, ova stranica se nije učitala kako treba. Osvježi je, pa bi trebalo da proradi.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
