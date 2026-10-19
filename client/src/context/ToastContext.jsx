@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { useLang } from './LanguageContext.jsx'
 
 const ToastContext = createContext(null)
 const LIFETIME = 5000 // ms koliko poruka stoji prije nego sama nestane
@@ -33,6 +34,7 @@ export function ToastProvider({ children }) {
 }
 
 function ToastViewport({ toasts, dismiss }) {
+  const { lang } = useLang()
   return (
     <div
       aria-live="polite"
@@ -63,7 +65,7 @@ function ToastViewport({ toasts, dismiss }) {
           </div>
           <button
             onClick={() => dismiss(t.id)}
-            aria-label="Zatvori obavještenje"
+            aria-label={lang === 'en' ? 'Close notification' : 'Zatvori obavještenje'}
             className="-m-1 shrink-0 p-1 text-ash transition-colors hover:text-bone"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4" aria-hidden="true">

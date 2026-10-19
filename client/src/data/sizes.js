@@ -18,7 +18,7 @@
 export const SIZE_CHART = {}
 
 export const COLUMNS = [
-  { key: 'chest', label: 'Grudi (pola obima)' },
-  { key: 'length', label: 'Dužina' },
-  { key: 'sleeve', label: 'Rukav' },
+  { key: 'chest', label: 'Grudi (pola obima)', en: 'Chest (flat width)' },
+  { key: 'length', label: 'Dužina', en: 'Length' },
+  { key: 'sleeve', label: 'Rukav', en: 'Sleeve' },
 ]

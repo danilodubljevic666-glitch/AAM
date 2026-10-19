@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
 import { supabase } from '../lib/supabase.js'
 import { ADMIN_COLUMNS, IMAGE_BUCKET, MISSING_COLUMN_MESSAGE, missingColumn, parseProduct } from '../lib/products.js'
+import { translateErrorReason, translateProduct } from '../lib/translate.js'
 import { requireAdmin } from '../middleware/auth.js'
 
 const router = Router()
@@ -78,6 +79,28 @@ router.delete('/products/:id', async (req, res, next) => {
     res.json({ ok: true })
   } catch (err) {
     next(err)
+  }
+})
+
+// POST /api/admin/translate — { name, description, tag } na crnogorskom → { name_en, description_en, tag_en }.
+// Ništa ne upisuje u bazu: forma prikaže prevod, admin ga po želji ispravi i tek onda sačuva.
+router.post('/translate', async (req, res) => {
+  const field = (v, max) => String(v ?? '').trim().slice(0, max)
+  const fields = {
+    name: field(req.body?.name, 80),
+    description: field(req.body?.description, 5000),
+    tag: field(req.body?.tag, 40),
+  }
+  if (!fields.name && !fields.description && !fields.tag) return res.status(400).json({ error: 'Nema teksta za prevod' })
+
+  try {
+    const en = await translateProduct(fields)
+    res.json({ name_en: en.name, description_en: en.description, tag_en: en.tag })
+  } catch (err) {
+    // Ruta je samo za admina, pa razlog smije u poruku: tako se greška vidi i bez terminala
+    const reason = translateErrorReason(err)
+    console.error('Prevod nije uspio:', reason)
+    res.status(502).json({ error: `Prevod trenutno ne radi (${reason}). Pokušaj ponovo ili upiši prevod ručno.` })
   }
 })
 

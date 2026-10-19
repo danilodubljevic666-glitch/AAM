@@ -9,8 +9,9 @@ import SizeGuide from '../components/SizeGuide.jsx'
 import { BoxIcon, CashIcon, SparkIcon, TruckIcon } from '../components/icons.jsx'
 import { LoadError } from '../components/LoadState.jsx'
 import { useCart } from '../context/CartContext.jsx'
+import { useLang, useT } from '../context/LanguageContext.jsx'
 import { useProducts } from '../context/ProductsContext.jsx'
-import { CATEGORIES } from '../lib/categories.js'
+import { CATEGORIES, categoryLabel } from '../lib/categories.js'
 import { endMorph, isMorphing } from '../lib/morph.js'
 import { formatPrice } from '../lib/format.js'
 import { productDescription, useProductJsonLd, useSeo } from '../lib/seo.js'
@@ -20,20 +21,57 @@ import NotFound from './NotFound.jsx'
 // Detalji zavise od vrste proizvoda: "240g pamuk" važi za majice, održavanje za odjeću.
 // Dostava i plaćanje su u bloku sa ikonicama ispod dugmeta, pa ih ovdje nema.
 // Materijal ostalih proizvoda upiši u opis proizvoda u admin panelu.
-const CARE = ['Održavanje', 'Pranje na 30°, naopačke, bez sušilice']
-const detailsFor = (category) => {
-  if (category === 'Majice') return [['Materijal', '100% pamuk, 240g/m²'], CARE]
-  if (category === 'Duksevi' || category === 'Komplet') return [CARE]
+const detailsFor = (category, t) => {
+  if (category === 'Majice') return [t.material, t.care]
+  if (category === 'Duksevi' || category === 'Komplet') return [t.care]
   return []
 }
 
-// Odgovori na pitanja koja kupca koče prije prve kupovine, odmah ispod dugmeta
-const PERKS = [
-  [TruckIcon, 'Dostava', 'Za 2 do 3 radna dana'],
-  [BoxIcon, 'Slanje', 'U roku od 24h'],
-  [CashIcon, 'Plaćanje', 'Pouzećem, gotovinom kuriru'],
-  [SparkIcon, 'Cijena dostave', `${formatPrice(SHIPPING_COST)} za cijelu Crnu Goru`],
-]
+// perks = odgovori na pitanja koja kupca koče prije prve kupovine, odmah ispod dugmeta; ikonice idu istim redom
+const PERK_ICONS = [TruckIcon, BoxIcon, CashIcon, SparkIcon]
+
+const TEXT = {
+  me: {
+    care: ['Održavanje', 'Pranje na 30°, naopačke, bez sušilice'],
+    material: ['Materijal', '100% pamuk, 240g/m²'],
+    perks: [
+      ['Dostava', 'Za 2 do 3 radna dana'],
+      ['Slanje', 'U roku od 24h'],
+      ['Plaćanje', 'Pouzećem, gotovinom kuriru'],
+      ['Cijena dostave', `${formatPrice(SHIPPING_COST)} za cijelu Crnu Goru`],
+    ],
+    notFoundTitle: 'Stranica ne postoji',
+    notFound: 'Ova majica ne postoji ili više nije u ponudi.',
+    photo: (n) => `Slika ${n}`,
+    breadcrumb: 'Putanja',
+    chooseSize: 'Izaberi veličinu',
+    size: 'Veličina',
+    sizeGuide: 'Vodič za veličine',
+    add: 'Dodaj u korpu',
+    sameCollection: 'Iz iste kolekcije',
+    youMightLike: 'Možda ti se svidi',
+  },
+  en: {
+    care: ['Care', 'Wash at 30°, inside out, no tumble dryer'],
+    material: ['Material', '100% cotton, 240g/m²'],
+    perks: [
+      ['Delivery', 'In 2 to 3 business days'],
+      ['Dispatch', 'Within 24h'],
+      ['Payment', 'Cash on delivery to the courier'],
+      ['Delivery fee', `${formatPrice(SHIPPING_COST)} anywhere in Montenegro`],
+    ],
+    notFoundTitle: 'Page not found',
+    notFound: "This item doesn't exist or is no longer available.",
+    photo: (n) => `Photo ${n}`,
+    breadcrumb: 'Breadcrumb',
+    chooseSize: 'Choose a size',
+    size: 'Size',
+    sizeGuide: 'Size guide',
+    add: 'Add to cart',
+    sameCollection: 'From the same collection',
+    youMightLike: 'You might also like',
+  },
+}
 
 export default function Product() {
   const { slug } = useParams()
@@ -41,6 +79,8 @@ export default function Product() {
 }
 
 function ProductView({ slug }) {
+  const { lang } = useLang()
+  const t = useT(TEXT)
   const { products, status } = useProducts()
   const { addItem } = useCart()
   const [size, setSize] = useState(null)
@@ -58,8 +98,8 @@ function ProductView({ slug }) {
   const product = status === 'ready' ? products.find((p) => p.slug === slug) : null
 
   useSeo({
-    title: product ? product.name : status === 'ready' ? 'Stranica ne postoji' : 'Shop',
-    description: product ? productDescription(product) : undefined,
+    title: product ? product.name : status === 'ready' ? t.notFoundTitle : 'Shop',
+    description: product ? productDescription(product, lang) : undefined,
     image: product?.images?.[0],
     noIndex: status === 'ready' && !product,
   })
@@ -115,10 +155,11 @@ function ProductView({ slug }) {
     )
   }
 
-  if (!product) return <NotFound message="Ova majica ne postoji ili više nije u ponudi." />
+  if (!product) return <NotFound message={t.notFound} />
 
   const related = products.filter((p) => p.id !== product.id).slice(0, 4)
-  const details = detailsFor(product.category)
+  const details = detailsFor(product.category, t)
+  const perks = t.perks.map(([title, text], i) => [PERK_ICONS[i], title, text])
   const categorySlug = CATEGORIES.find((c) => c.name === product.category)?.slug
 
   const handleAdd = () => {
@@ -163,7 +204,7 @@ function ProductView({ slug }) {
                 <button
                   key={src}
                   onClick={() => setPhoto(i)}
-                  aria-label={`Slika ${i + 1}`}
+                  aria-label={t.photo(i + 1)}
                   aria-pressed={photo === i}
                   className={`relative h-20 w-20 overflow-hidden border bg-night-800 transition-[border-color,scale] active:scale-95 sm:h-24 sm:w-24 ${
                     photo === i ? 'border-bone' : 'border-night-600 hover:border-ash'
@@ -177,11 +218,11 @@ function ProductView({ slug }) {
         </div>
 
         <div>
-          <nav className="animate-fade-up font-mono text-xs uppercase tracking-widest text-ash" aria-label="Putanja">
+          <nav className="animate-fade-up font-mono text-xs uppercase tracking-widest text-ash" aria-label={t.breadcrumb}>
             <Link to="/shop" className="transition-colors hover:text-alarm">Shop</Link> /{' '}
             {categorySlug ? (
               <Link to={`/shop?kategorija=${categorySlug}`} className="transition-colors hover:text-alarm">
-                {product.category}
+                {categoryLabel(product.category, lang)}
               </Link>
             ) : (
               product.category
@@ -200,7 +241,7 @@ function ProductView({ slug }) {
 
           <div ref={sizesRef} className="mt-10 animate-fade-up scroll-mt-32 [animation-delay:320ms]">
             <div className="flex items-center justify-between font-mono text-xs uppercase tracking-widest">
-              <span className={error ? 'text-alarm' : 'text-ash'}>{error ? 'Izaberi veličinu' : 'Veličina'}</span>
+              <span className={error ? 'text-alarm' : 'text-ash'}>{error ? t.chooseSize : t.size}</span>
               <button
                 type="button"
                 onClick={() => setGuideOpen(true)}
@@ -209,7 +250,7 @@ function ProductView({ slug }) {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5" aria-hidden="true">
                   <path d="M3 8h18v8H3zM7 8v4M11 8v6M15 8v4M19 8v6" />
                 </svg>
-                Vodič za veličine
+                {t.sizeGuide}
               </button>
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -236,11 +277,11 @@ function ProductView({ slug }) {
             onClick={handleAdd}
             className="btn-shine mt-8 w-full animate-fade-up bg-bone py-5 font-mono text-sm font-bold uppercase tracking-widest text-night transition-[background-color,scale] [animation-delay:400ms] hover:bg-alarm active:scale-[0.98]"
           >
-            Dodaj u korpu
+            {t.add}
           </button>
 
           <ul className="mt-6 grid animate-fade-up grid-cols-2 gap-px border border-night-600 bg-night-600 [animation-delay:440ms]">
-            {PERKS.map(([Icon, title, text]) => (
+            {perks.map(([Icon, title, text]) => (
               <li key={title} className="flex items-start gap-3 bg-night p-4">
                 <Icon className="mt-0.5 h-5 w-5 shrink-0 text-alarm" />
                 <div>
@@ -269,8 +310,8 @@ function ProductView({ slug }) {
       {related.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:pt-24">
           <Reveal>
-            <p className="font-mono text-xs uppercase tracking-[0.3em] text-ash">Iz iste kolekcije</p>
-            <h2 className="mt-3 font-display text-5xl uppercase sm:text-6xl">Možda ti se svidi</h2>
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-ash">{t.sameCollection}</p>
+            <h2 className="mt-3 font-display text-5xl uppercase sm:text-6xl">{t.youMightLike}</h2>
           </Reveal>
           <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
             {related.map((p, i) => (
@@ -299,7 +340,7 @@ function ProductView({ slug }) {
             onClick={handleStickyAdd}
             className="shrink-0 bg-bone px-5 py-3.5 font-mono text-xs font-bold uppercase tracking-widest text-night transition-[background-color,scale] active:scale-95"
           >
-            {size ? 'Dodaj u korpu' : 'Izaberi veličinu'}
+            {size ? t.add : t.chooseSize}
           </button>
         </div>
       </div>

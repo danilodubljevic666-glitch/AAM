@@ -15,6 +15,7 @@ import About from './pages/About.jsx'
 import Contact from './pages/Contact.jsx'
 import NotFound from './pages/NotFound.jsx'
 import { hidePreloader } from './lib/preloader.js'
+import { useLang } from './context/LanguageContext.jsx'
 
 // Admin (i Supabase klijent) se učitava tek kad neko otvori /admin
 const Admin = lazy(() => import('./pages/Admin.jsx'))
@@ -30,6 +31,7 @@ function ScrollToTop() {
 
 export default function App() {
   const { pathname } = useLocation()
+  const { lang } = useLang()
 
   // Brendirani preloader iz index.html se sklanja tek kad je prvi ekran spreman
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function App() {
         href="#sadrzaj"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-bone focus:px-5 focus:py-3 focus:font-mono focus:text-xs focus:font-bold focus:uppercase focus:tracking-widest focus:text-night"
       >
-        Preskoči na sadržaj
+        {lang === 'en' ? 'Skip to content' : 'Preskoči na sadržaj'}
       </a>
 
       <ScrollProgress />

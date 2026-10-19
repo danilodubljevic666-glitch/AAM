@@ -1,22 +1,38 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useT } from '../context/LanguageContext.jsx'
 import { useSeo } from '../lib/seo.js'
 
-const links = [
-  { to: '/', label: 'Početna' },
-  { to: '/shop', label: 'Shop' },
-  { to: '/kontakt', label: 'Kontakt' },
-]
+const TEXT = {
+  me: {
+    links: ['Početna', 'Shop', 'Kontakt'],
+    title: 'Stranica ne postoji',
+    message: 'Ova stranica je otišla na spavanje.',
+    error: 'Greška 404',
+    nav: 'Korisni linkovi',
+  },
+  en: {
+    links: ['Home', 'Shop', 'Contact'],
+    title: 'Page not found',
+    message: 'This page has gone to sleep.',
+    error: 'Error 404',
+    nav: 'Useful links',
+  },
+}
+
+// Nazivi linkova su u TEXT.links, istim redom
+const links = [{ to: '/' }, { to: '/shop' }, { to: '/kontakt' }]
 
 // message — npr. za majicu koja ne postoji; inače opšta poruka
-export default function NotFound({ message = 'Ova stranica je otišla na spavanje.' }) {
-  useSeo({ title: 'Stranica ne postoji', noIndex: true })
+export default function NotFound({ message }) {
+  const t = useT(TEXT)
+  useSeo({ title: t.title, noIndex: true })
   const { pathname } = useLocation()
 
   return (
     <section className="relative mx-auto flex max-w-7xl flex-col items-center overflow-hidden px-4 py-24 text-center sm:px-6">
       <div className="pointer-events-none absolute left-1/2 top-1/3 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 animate-glow rounded-full bg-alarm/10 blur-[110px]" />
 
-      <p className="relative animate-fade-up font-mono text-xs uppercase tracking-[0.3em] text-ash">Greška 404</p>
+      <p className="relative animate-fade-up font-mono text-xs uppercase tracking-[0.3em] text-ash">{t.error}</p>
 
       <h1 className="relative mt-4 animate-fade-up font-display text-[clamp(7rem,28vw,16rem)] leading-none [animation-delay:100ms]">
         4
@@ -34,10 +50,10 @@ export default function NotFound({ message = 'Ova stranica je otišla na spavanj
         4
       </h1>
 
-      <p className="relative mt-6 max-w-md animate-fade-up text-lg text-ash [animation-delay:200ms]">{message}</p>
+      <p className="relative mt-6 max-w-md animate-fade-up text-lg text-ash [animation-delay:200ms]">{message ?? t.message}</p>
       <p className="relative mt-2 max-w-full animate-fade-up truncate font-mono text-xs text-ash/60 [animation-delay:250ms]">{pathname}</p>
 
-      <nav className="relative mt-10 flex animate-fade-up flex-wrap justify-center gap-3 [animation-delay:350ms]" aria-label="Korisni linkovi">
+      <nav className="relative mt-10 flex animate-fade-up flex-wrap justify-center gap-3 [animation-delay:350ms]" aria-label={t.nav}>
         {links.map((l, i) => (
           <Link
             key={l.to}
@@ -46,7 +62,7 @@ export default function NotFound({ message = 'Ova stranica je otišla na spavanj
               i === 0 ? 'bg-bone text-night hover:bg-alarm' : 'border border-night-600 hover:border-bone'
             }`}
           >
-            {l.label}
+            {t.links[i]}
           </Link>
         ))}
       </nav>

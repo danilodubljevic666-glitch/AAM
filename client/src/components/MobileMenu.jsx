@@ -1,15 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { useLang, useT } from '../context/LanguageContext.jsx'
 import { useProducts } from '../context/ProductsContext.jsx'
-import { CATEGORIES } from '../lib/categories.js'
+import { CATEGORIES, categoryLabel } from '../lib/categories.js'
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '../lib/site.js'
 
-const LINKS = [
-  { to: '/', label: 'Početna', end: true },
-  { to: '/shop', label: 'Shop' },
-  { to: '/o-nama', label: 'O nama' },
-  { to: '/kontakt', label: 'Kontakt' },
-]
+const TEXT = {
+  me: { links: ['Početna', 'Shop', 'O nama', 'Kontakt'], menu: 'Meni', categories: 'Kategorije' },
+  en: { links: ['Home', 'Shop', 'About', 'Contact'], menu: 'Menu', categories: 'Categories' },
+}
+
+// Nazivi linkova su u TEXT.links, istim redom
+const LINKS = [{ to: '/', end: true }, { to: '/shop' }, { to: '/o-nama' }, { to: '/kontakt' }]
 
 // Krug se širi iz ugla u kom je dugme menija (gore desno)
 const ORIGIN = 'calc(100% - 2.25rem) 4.1rem' // 2rem crvena traka + pola navigacije
@@ -24,6 +26,8 @@ const enter = (open, i, extra = '') => ({
 // Meni preko čitavog ekrana — samo na telefonu (na većim ekranima linkovi su u navbaru)
 export default function MobileMenu({ open, onClose }) {
   const firstLinkRef = useRef(null)
+  const { lang } = useLang()
+  const t = useT(TEXT)
   // Samo kategorije u kojima ima nečega (dok se katalog učitava, sve)
   const { products, status } = useProducts()
   const categories =
@@ -54,7 +58,7 @@ export default function MobileMenu({ open, onClose }) {
       id="mobile-menu"
       role="dialog"
       aria-modal="true"
-      aria-label="Meni"
+      aria-label={t.menu}
       inert={!open}
       className="fixed inset-0 z-[35] flex flex-col overflow-y-auto overflow-x-hidden bg-night px-6 pb-8 pt-36 transition-[clip-path] duration-700 ease-[cubic-bezier(0.7,0,0.2,1)] md:hidden"
       style={{ clipPath: `circle(${open ? '150%' : '0%'} at ${ORIGIN})` }}
@@ -76,14 +80,14 @@ export default function MobileMenu({ open, onClose }) {
               }
             >
               <span className="mt-2 w-6 shrink-0 font-mono text-xs text-ash">{String(i + 1).padStart(2, '0')}</span>
-              <span className="transition-transform duration-300 group-hover:translate-x-2">{l.label}</span>
+              <span className="transition-transform duration-300 group-hover:translate-x-2">{t.links[i]}</span>
             </NavLink>
           </div>
         ))}
       </nav>
 
       <div {...enter(open, LINKS.length, 'relative mt-10')}>
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ash">Kategorije</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ash">{t.categories}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {categories.map((c) => (
             <Link
@@ -92,7 +96,7 @@ export default function MobileMenu({ open, onClose }) {
               onClick={onClose}
               className="flex min-h-11 items-center border border-night-600 px-4 font-mono text-xs uppercase tracking-widest transition-colors active:border-bone active:bg-bone active:text-night"
             >
-              {c.name}
+              {categoryLabel(c.name, lang)}
             </Link>
           ))}
         </div>

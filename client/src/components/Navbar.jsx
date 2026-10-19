@@ -1,17 +1,35 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useCart } from '../context/CartContext.jsx'
+import { useT } from '../context/LanguageContext.jsx'
+import LanguageSwitch from './LanguageSwitch.jsx'
 import MobileMenu from './MobileMenu.jsx'
 
-// Gornja traka: ono što kupca najviše zanima, prije nego što išta klikne.
+// perks = gornja traka: ono što kupca najviše zanima, prije nego što išta klikne.
 // Na telefonu ostaje samo prva poruka, da stane u jedan red.
-const PERKS = ['Dostava širom Crne Gore', 'Plaćanje pouzećem', 'Slanje u roku od 24h']
+const TEXT = {
+  me: {
+    perks: ['Dostava širom Crne Gore', 'Plaćanje pouzećem', 'Slanje u roku od 24h'],
+    links: ['Početna', 'Shop', 'O nama', 'Kontakt'],
+    home: 'AAM Clothing, početna',
+    cart: 'Korpa',
+    openCart: (n) => `Otvori korpu (${n} ${n === 1 ? 'artikal' : 'artikala'})`,
+    openMenu: 'Otvori meni',
+    closeMenu: 'Zatvori meni',
+  },
+  en: {
+    perks: ['Delivery across Montenegro', 'Cash on delivery', 'Ships within 24h'],
+    links: ['Home', 'Shop', 'About', 'Contact'],
+    home: 'AAM Clothing, home',
+    cart: 'Cart',
+    openCart: (n) => `Open cart (${n} ${n === 1 ? 'item' : 'items'})`,
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
+  },
+}
 
-const links = [
-  { to: '/shop', label: 'Shop' },
-  { to: '/o-nama', label: 'O nama' },
-  { to: '/kontakt', label: 'Kontakt' },
-]
+// Nazivi linkova su u TEXT.links, istim redom. end: "Početna" je aktivna samo na samoj početnoj
+const links = [{ to: '/', end: true }, { to: '/shop' }, { to: '/o-nama' }, { to: '/kontakt' }]
 
 // Tri linije koje se pretvore u X
 const bar =
@@ -20,6 +38,7 @@ const bar =
 export default function Navbar() {
   const { count, isOpen, setIsOpen } = useCart()
   const { pathname } = useLocation()
+  const t = useT(TEXT)
   // Meni je otvoren samo na stranici na kojoj je otvoren — svaka navigacija ga zatvara
   const [menuOpenAt, setMenuOpenAt] = useState(null)
   const menuOpen = menuOpenAt === pathname
@@ -70,7 +89,7 @@ export default function Navbar() {
       >
         <div className="bg-alarm text-night">
           <ul className="mx-auto flex h-8 max-w-7xl items-center justify-center gap-4 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] sm:text-[11px]">
-            {PERKS.map((perk, i) => (
+            {t.perks.map((perk, i) => (
               <li key={perk} className={`items-center gap-4 ${i === 0 ? 'flex' : i === 1 ? 'hidden sm:flex' : 'hidden md:flex'}`}>
                 {i > 0 && <span aria-hidden="true">·</span>}
                 {perk}
@@ -88,7 +107,7 @@ export default function Navbar() {
               scrolled ? 'py-3' : 'py-4'
             }`}
           >
-            <Link to="/" onClick={closeMenu} aria-label="AAM Clothing, početna" className="transition-opacity hover:opacity-70">
+            <Link to="/" onClick={closeMenu} aria-label={t.home} className="transition-opacity hover:opacity-70">
               <img
                 src="/brand/logo-mark.webp"
                 alt="AAM Clothing 2AM logo"
@@ -99,14 +118,15 @@ export default function Navbar() {
             </Link>
 
             <div className="hidden items-center gap-8 md:flex">
-              {links.map((l) => (
-                <NavLink key={l.to} to={l.to} className={linkClass}>
-                  {l.label}
+              {links.map((l, i) => (
+                <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>
+                  {t.links[i]}
                 </NavLink>
               ))}
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <LanguageSwitch />
               <button
                 onClick={() => {
                   closeMenu()
@@ -114,7 +134,7 @@ export default function Navbar() {
                 }}
                 // -mr-1 px-1 h-11: ikonica je sama po sebi 20px, a prstu treba 44px
                 className="group -mr-1 flex h-11 items-center gap-2 px-1 font-mono text-xs uppercase tracking-widest transition-colors hover:text-alarm"
-                aria-label={`Otvori korpu (${count} ${count === 1 ? 'artikal' : 'artikala'})`}
+                aria-label={t.openCart(count)}
               >
                 <span className="relative">
                   <svg
@@ -137,7 +157,7 @@ export default function Navbar() {
                     </span>
                   )}
                 </span>
-                <span className="hidden sm:inline">Korpa</span>
+                <span className="hidden sm:inline">{t.cart}</span>
               </button>
 
               <button
@@ -145,7 +165,7 @@ export default function Navbar() {
                 className="relative -mr-2 h-11 w-11 md:hidden"
                 aria-expanded={menuOpen}
                 aria-controls="mobile-menu"
-                aria-label={menuOpen ? 'Zatvori meni' : 'Otvori meni'}
+                aria-label={menuOpen ? t.closeMenu : t.openMenu}
               >
                 <span className="absolute inset-y-0 left-2 right-2" aria-hidden="true">
                   <span className={`${bar} w-full ${menuOpen ? 'translate-y-0 rotate-45' : '-translate-y-[7px]'}`} />

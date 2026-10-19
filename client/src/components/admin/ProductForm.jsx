@@ -9,7 +9,10 @@ const DEFAULT_SIZES = ['S', 'M', 'L', 'XL']
 const TAGS = ['Novo', 'Bestseller', 'Limitirano']
 const MAX_SIDE = 1600 // px — veće slike se smanjuju pre uploada
 
-const EMPTY = { name: '', slug: '', price: '', sale_price: '', category: '', tag: '', sizes: DEFAULT_SIZES, description: '', images: [], active: true, sort_order: 0 }
+const EMPTY = {
+  name: '', slug: '', price: '', sale_price: '', category: '', tag: '', sizes: DEFAULT_SIZES, description: '', images: [], active: true, sort_order: 0,
+  name_en: '', description_en: '', tag_en: '', // engleski prevod; prazno = na engleskoj verziji stoji crnogorski tekst
+}
 const QUICK_DISCOUNTS = [10, 20, 30, 50] // %
 const isCategory = (name) => CATEGORIES.some((c) => c.name === name)
 
@@ -48,6 +51,9 @@ export default function ProductForm({ product, token, onCancel, onSaved }) {
           sale_price: product.sale_price != null ? product.sale_price / 100 : '',
           tag: product.tag ?? '',
           category: isCategory(product.category) ? product.category : '',
+          name_en: product.name_en ?? '',
+          description_en: product.description_en ?? '',
+          tag_en: product.tag_en ?? '',
         }
       : EMPTY,
   )
@@ -55,6 +61,8 @@ export default function ProductForm({ product, token, onCancel, onSaved }) {
   const [uploading, setUploading] = useState(0)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [translating, setTranslating] = useState(false)
+  const [translateError, setTranslateError] = useState(null)
 
   const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
 
@@ -107,6 +115,25 @@ export default function ProductForm({ product, token, onCancel, onSaved }) {
       } finally {
         setUploading((n) => n - 1)
       }
+    }
+  }
+
+  // Dugme "Prevedi": popunjava engleska polja iz crnogorskih. Ništa se ne čuva dok se ne klikne "Sačuvaj",
+  // pa prevod može prvo da se ispravi.
+  const translate = async () => {
+    setTranslating(true)
+    setTranslateError(null)
+    try {
+      const en = await api('/admin/translate', {
+        method: 'POST',
+        token,
+        body: JSON.stringify({ name: form.name, description: form.description, tag: form.tag }),
+      })
+      setForm((f) => ({ ...f, ...en }))
+    } catch (err) {
+      setTranslateError(err.message)
+    } finally {
+      setTranslating(false)
     }
   }
 
@@ -269,6 +296,37 @@ export default function ProductForm({ product, token, onCancel, onSaved }) {
             <span className={labelClass}>Opis</span>
             <textarea rows={5} value={form.description} onChange={set('description')} className={`${inputClass} resize-y font-sans`} />
           </label>
+
+          {/* ENGLESKI PREVOD — prazno polje = na engleskoj verziji sajta stoji crnogorski tekst */}
+          <div className="border border-night-600 p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className={labelClass}>Engleski prevod</p>
+              <button
+                type="button"
+                onClick={translate}
+                disabled={translating || !form.name.trim()}
+                className={`${secondaryButton} px-4 py-2`}
+              >
+                {translating ? 'Prevodim…' : 'Prevedi na engleski'}
+              </button>
+            </div>
+            <p className="mt-2 font-mono text-[11px] leading-relaxed text-ash">
+              Upiši naziv, opis i oznaku na crnogorskom, pa klikni dugme. Prevod možeš ispraviti prije čuvanja.
+            </p>
+            <label className="mt-4 block">
+              <span className={labelClass}>Naziv (EN)</span>
+              <input maxLength={80} value={form.name_en} onChange={set('name_en')} placeholder="npr. 2AM Hoodie" className={inputClass} />
+            </label>
+            <label className="mt-4 block">
+              <span className={labelClass}>Oznaka (EN)</span>
+              <input value={form.tag_en} onChange={set('tag_en')} placeholder="npr. New" className={inputClass} />
+            </label>
+            <label className="mt-4 block">
+              <span className={labelClass}>Opis (EN)</span>
+              <textarea rows={4} value={form.description_en} onChange={set('description_en')} className={`${inputClass} resize-y font-sans`} />
+            </label>
+            {translateError && <p className="mt-3 font-mono text-xs uppercase tracking-widest text-alarm">{translateError}</p>}
+          </div>
 
           <label className="flex items-center gap-3">
             <input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} className="h-5 w-5 accent-alarm" />

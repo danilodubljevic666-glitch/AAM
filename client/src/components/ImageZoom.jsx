@@ -1,4 +1,10 @@
 import { useRef, useState } from 'react'
+import { useT } from '../context/LanguageContext.jsx'
+
+const TEXT = {
+  me: { hover: 'Pređi mišem za zum', tap: 'Dodirni za zum' },
+  en: { hover: 'Hover to zoom', tap: 'Tap to zoom' },
+}
 
 const clamp = (n) => Math.min(100, Math.max(0, n))
 
@@ -7,6 +13,7 @@ const clamp = (n) => Math.min(100, Math.max(0, n))
 export default function ImageZoom({ children, scale = 2.2, className = '' }) {
   const [zoomed, setZoomed] = useState(false)
   const innerRef = useRef(null)
+  const t = useT(TEXT)
 
   // Tačka uveličanja se pomjera direktno kroz style (bez re-rendera na svaki pokret miša)
   const aim = (e) => {
@@ -51,8 +58,8 @@ export default function ImageZoom({ children, scale = 2.2, className = '' }) {
           <circle cx="11" cy="11" r="7" />
           <path d="M20 20l-4-4M11 8v6M8 11h6" />
         </svg>
-        <span className="pointer-coarse:hidden">Pređi mišem za zum</span>
-        <span className="hidden pointer-coarse:inline">Dodirni za zum</span>
+        <span className="pointer-coarse:hidden">{t.hover}</span>
+        <span className="hidden pointer-coarse:inline">{t.tap}</span>
       </span>
     </div>
   )

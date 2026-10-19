@@ -20,6 +20,20 @@ Podešavanja su u `vercel.json`, a baza i slike ostaju u Supabase-u.
    `TRUST_PROXY=1`, i kad budu spremni `EMAILJS_*` ključevi. (`PORT` i `CLIENT_URL` nisu potrebni.)
 4. **Deploy**. Svaki sljedeći `git push` na `main` automatski objavljuje novu verziju.
 
+## Engleska verzija (ME / EN)
+Prekidač **ME / EN** je u zaglavlju; izbor se pamti u browseru. Prvi posjetioci i Google uvijek
+vide crnogorsku verziju (adrese stranica su iste za oba jezika).
+
+- **Tekstovi sajta** su u svakoj komponenti na vrhu fajla, u objektu `TEXT = { me: {...}, en: {...} }`.
+  Novi tekst se dodaje na oba jezika.
+- **Proizvodi** imaju kolone `name_en`, `description_en`, `tag_en` (`server/db/setup.sql`). U admin
+  formi dugme **Prevedi na engleski** popuni ta polja, a u listi proizvoda dugme
+  **Prevedi na engleski (n)** prevede sve kojima prevod fali. Prazno polje = na engleskoj verziji
+  stoji crnogorski tekst. Kategorije se prevode same (`client/src/lib/categories.js`).
+- **Prevodilac**: bez podešavanja koristi se besplatni Google prevodilac. Za prirodniji prevod
+  dodaj `ANTHROPIC_API_KEY` (server/.env i Vercel) i prevodiće Claude. Koji se koristi piše na
+  `/api/health` pod `translate`.
+
 ## Narudžbe na email (EmailJS)
 Svaka narudžba se čuva u Supabase tabeli `orders` i šalje na email preko [EmailJS](https://www.emailjs.com)
 (besplatno do 200 emailova mjesečno). Cijene uvijek računa server iz baze.

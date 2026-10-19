@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLang } from '../context/LanguageContext.jsx'
 
 const SHOW_AFTER = 600 // px skrolovanja prije nego što se dugme pojavi
 const R = 22
@@ -7,6 +8,7 @@ const CIRCUMFERENCE = 2 * Math.PI * R
 // Dugme "nazad na vrh" u donjem desnom uglu; prsten oko strelice pokazuje koliko je stranice pređeno
 export default function BackToTop() {
   const [visible, setVisible] = useState(() => window.scrollY > SHOW_AFTER)
+  const { lang } = useLang()
   const ringRef = useRef(null)
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function BackToTop() {
   return (
     <button
       onClick={toTop}
-      aria-label="Nazad na vrh stranice"
+      aria-label={lang === 'en' ? 'Back to top' : 'Nazad na vrh stranice'}
       inert={!visible}
       className={`back-to-top group fixed bottom-5 right-5 z-30 grid h-14 w-14 place-items-center rounded-full bg-night/90 backdrop-blur transition-[opacity,translate,scale,bottom] duration-300 hover:text-alarm active:scale-90 sm:bottom-8 sm:right-8 ${
         visible ? 'opacity-100' : 'pointer-events-none translate-y-4 opacity-0'

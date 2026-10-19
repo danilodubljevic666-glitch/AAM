@@ -11,6 +11,7 @@ export const MISSING_COLUMN_MESSAGE = 'Baza nije ažurirana. U Supabase SQL Edit
 // Moraju da se poklapaju sa client/src/lib/categories.js i admin formom
 const CATEGORIES = ['Majice', 'Duksevi', 'Kačketi', 'Komplet']
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'UNI'] // UNI = univerzalna (kačketi)
+const EN_FIELDS = ['name_en', 'description_en', 'tag_en']
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const IMAGE_RE = /^(https?:\/\/|\/)/
 
@@ -34,7 +35,12 @@ export function parseProduct(body) {
     sort_order: Number(b.sort_order ?? 0),
   }
 
+  // Engleski prevod (prazno = na engleskoj verziji sajta stoji crnogorski tekst).
+  // Upisuje se samo kad ga zahtjev sadrži, pa "Sakrij/Prikaži" radi i prije nego što se pokrene setup.sql.
+  for (const key of EN_FIELDS) if (key in b) value[key] = text(b[key]) || null
+
   if (!value.name || value.name.length > 80) return { error: 'Naziv je obavezan (do 80 znakova)' }
+  if (value.name_en?.length > 80) return { error: 'Naziv na engleskom može imati do 80 znakova' }
   if (!SLUG_RE.test(value.slug)) return { error: 'Slug smije da sadrži samo mala slova, brojeve i crtice' }
   if (!Number.isInteger(value.price) || value.price < 0) return { error: 'Neispravna cijena' }
   if (value.sale_price !== null && (!Number.isInteger(value.sale_price) || value.sale_price <= 0 || value.sale_price >= value.price)) {

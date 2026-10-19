@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useLang } from '../context/LanguageContext.jsx'
 import { priceOf } from './pricing.js'
 import { SHIPPING_COST } from './shipping.js'
 
@@ -8,16 +9,34 @@ const SITE_URL = import.meta.env.VITE_SITE_URL
 // Ljudi brend traže kao "aam clothing" / "aamclothing", pa to ime ide u svaki naslov.
 // Isti tekstovi stoje i u index.html (to Google vidi prije nego što se JavaScript pokrene).
 const SITE_NAME = 'AAM Clothing'
-const HOME_TITLE = 'AAM Clothing Nikšić | 2AM majice i duksevi, Crna Gora'
-const HOME_DESCRIPTION =
-  'AAM Clothing iz Nikšića. 2AM majice, duksevi i kačketi od teškog pamuka, u malim serijama. Plaćanje pouzećem, dostava širom Crne Gore za 2 do 3 radna dana.'
+// Engleski tekstovi važe samo za posjetioce koji su izabrali EN (Google vidi crnogorsku verziju)
+const TEXT = {
+  me: {
+    homeTitle: 'AAM Clothing Nikšić | 2AM majice i duksevi, Crna Gora',
+    homeDescription:
+      'AAM Clothing iz Nikšića. 2AM majice, duksevi i kačketi od teškog pamuka, u malim serijama. Plaćanje pouzećem, dostava širom Crne Gore za 2 do 3 radna dana.',
+    productIntro: (name) => `${name}, AAM Clothing iz Nikšića. Male serije, dizajn koji se ne ponavlja.`,
+    productOutro: 'Plaćanje pouzećem, dostava širom Crne Gore za 2 do 3 radna dana.',
+    home: 'Početna',
+    locale: 'sr_ME',
+  },
+  en: {
+    homeTitle: 'AAM Clothing Nikšić | 2AM tees and hoodies, Montenegro',
+    homeDescription:
+      'AAM Clothing from Nikšić. 2AM tees, hoodies and caps in heavy cotton, made in small batches. Cash on delivery, shipping across Montenegro in 2 to 3 business days.',
+    productIntro: (name) => `${name}, AAM Clothing from Nikšić. Small batches, designs that never repeat.`,
+    productOutro: 'Cash on delivery, shipping across Montenegro in 2 to 3 business days.',
+    home: 'Home',
+    locale: 'en_US',
+  },
+}
 
 // Opis proizvoda za Google i pregled linka. Proizvodi bez opisa u admin panelu dobijaju
 // rečenicu o brendu, inače bi Google ispod naslova prikazao samo naziv.
-export function productDescription(product) {
+export function productDescription(product, lang = 'me') {
+  const t = TEXT[lang]
   const own = product.description?.trim()
-  const intro = own || `${product.name}, AAM Clothing iz Nikšića. Male serije, dizajn koji se ne ponavlja.`
-  return `${intro} Plaćanje pouzećem, dostava širom Crne Gore za 2 do 3 radna dana.`
+  return `${own || t.productIntro(product.name)} ${t.productOutro}`
 }
 
 // React Router mijenja samo sadržaj stranice; naslov, opis i canonical u <head>
@@ -33,14 +52,18 @@ function meta(key, attr = 'name') {
 }
 
 export function useSeo({ title, description, image, noIndex = false } = {}) {
+  const { lang } = useLang()
+
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : HOME_TITLE
-    const desc = description || HOME_DESCRIPTION
+    const t = TEXT[lang]
+    const fullTitle = title ? `${title} | ${SITE_NAME}` : t.homeTitle
+    const desc = description || t.homeDescription
     const url = SITE_URL + window.location.pathname
 
     document.title = fullTitle
     meta('description').content = desc
     meta('robots').content = noIndex ? 'noindex, nofollow' : 'index, follow'
+    meta('og:locale', 'property').content = t.locale
     meta('og:title', 'property').content = fullTitle
     meta('og:description', 'property').content = desc
     meta('og:url', 'property').content = url
@@ -62,12 +85,14 @@ export function useSeo({ title, description, image, noIndex = false } = {}) {
       document.head.appendChild(canonical)
     }
     canonical.href = url
-  }, [title, description, image, noIndex])
+  }, [title, description, image, noIndex, lang])
 }
 
 // Google u rezultatima pretrage može da prikaže cijenu i dostupnost majice.
 // Cijene su u centima, schema.org ih traži kao "29.90".
 export function useProductJsonLd(product) {
+  const { lang } = useLang()
+
   useEffect(() => {
     if (!product) return
 
@@ -78,7 +103,7 @@ export function useProductJsonLd(product) {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Početna', item: `${origin}/` },
+        { '@type': 'ListItem', position: 1, name: TEXT[lang].home, item: `${origin}/` },
         { '@type': 'ListItem', position: 2, name: 'Shop', item: `${origin}/shop` },
         { '@type': 'ListItem', position: 3, name: product.name },
       ],
@@ -91,7 +116,7 @@ export function useProductJsonLd(product) {
       '@context': 'https://schema.org',
       '@type': 'Product',
       name: product.name,
-      description: productDescription(product),
+      description: productDescription(product, lang),
       sku: product.slug,
       category: product.category,
       image: (product.images ?? []).map(absolute),
@@ -118,5 +143,5 @@ export function useProductJsonLd(product) {
     }])
     document.head.appendChild(script)
     return () => script.remove()
-  }, [product])
+  }, [product, lang])
 }

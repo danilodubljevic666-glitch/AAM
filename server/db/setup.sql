@@ -26,6 +26,11 @@ alter table public.products drop constraint if exists products_sale_price_check;
 alter table public.products add constraint products_sale_price_check
   check (sale_price is null or (sale_price > 0 and sale_price < price));
 
+-- Engleski prevod (dugme "Prevedi" u admin panelu); prazno = engleska verzija sajta prikazuje crnogorski tekst
+alter table public.products add column if not exists name_en        text;
+alter table public.products add column if not exists description_en text;
+alter table public.products add column if not exists tag_en         text;
+
 alter table public.products enable row level security;
 
 -- Katalog je javan (samo aktivni proizvodi, samo čitanje)

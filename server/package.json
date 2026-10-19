@@ -10,6 +10,7 @@
     "create-admin": "node --env-file=.env scripts/create-admin.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
     "@supabase/supabase-js": "^2.117.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",

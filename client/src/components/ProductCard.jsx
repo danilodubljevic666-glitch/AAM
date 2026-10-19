@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import Price, { DiscountBadge } from './Price.jsx'
 import ProductImage from './ProductImage.jsx'
 import Reveal from './Reveal.jsx'
+import { useLang } from '../context/LanguageContext.jsx'
+import { categoryLabel } from '../lib/categories.js'
 import { useTilt } from '../lib/useTilt.js'
 import { isPlainClick, useMorphNavigate } from '../lib/morph.js'
 
@@ -12,6 +14,7 @@ export default function ProductCard({ product, index = 0 }) {
   const tiltRef = useTilt()
   const cardRef = useRef(null)
   const morphTo = useMorphNavigate()
+  const { lang } = useLang()
 
   // Klik: slika se označi i "otputuje" na stranicu proizvoda.
   // Ctrl/Cmd-klik i srednji taster ostaju browseru (otvaranje u novom tabu).
@@ -63,7 +66,7 @@ export default function ProductCard({ product, index = 0 }) {
 
           {/* traka se podiže odozdo na hover (na telefonu je cijela kartica ionako link) */}
           <span className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-center gap-2 bg-bone py-3 font-mono text-[11px] font-bold uppercase tracking-widest text-night transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0">
-            Pogledaj <span aria-hidden="true">→</span>
+            {lang === 'en' ? 'View' : 'Pogledaj'} <span aria-hidden="true">→</span>
           </span>
         </div>
 
@@ -73,7 +76,7 @@ export default function ProductCard({ product, index = 0 }) {
             <h3 className="font-display text-xl uppercase leading-tight tracking-wide transition-colors group-hover:text-alarm">
               {product.name}
             </h3>
-            <p className="font-mono text-xs uppercase text-ash">{product.category}</p>
+            <p className="font-mono text-xs uppercase text-ash">{categoryLabel(product.category, lang)}</p>
           </div>
           <p className="whitespace-nowrap font-mono text-sm sm:text-right">
             <Price product={product} className="sm:justify-end" />

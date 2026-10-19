@@ -1,20 +1,41 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext.jsx'
+import { useT } from '../context/LanguageContext.jsx'
 import { useToast } from '../context/ToastContext.jsx'
 import { formatPrice } from '../lib/format.js'
 import ProductImage from './ProductImage.jsx'
 
+const TEXT = {
+  me: {
+    removed: 'Uklonjeno iz korpe',
+    undo: 'Vrati nazad',
+    size: 'Veličina',
+    less: (name) => `Smanji količinu: ${name}`,
+    more: (name) => `Povećaj količinu: ${name}`,
+    remove: 'Ukloni',
+  },
+  en: {
+    removed: 'Removed from cart',
+    undo: 'Undo',
+    size: 'Size',
+    less: (name) => `Decrease quantity: ${name}`,
+    more: (name) => `Increase quantity: ${name}`,
+    remove: 'Remove',
+  },
+}
+
 export default function CartLine({ item }) {
   const { updateQty, removeItem, restoreItem, setIsOpen } = useCart()
   const { toast } = useToast()
+  const t = useT(TEXT)
 
   // Uklanjanje je lako pogriješiti — zato uvijek ide i dugme za povratak
   const remove = () => {
     removeItem(item.id, item.size)
     toast({
-      title: 'Uklonjeno iz korpe',
+      title: t.removed,
       text: `${item.name} · ${item.size}`,
-      action: { label: 'Vrati nazad', onClick: () => restoreItem(item) },
+      action: { label: t.undo, onClick: () => restoreItem(item) },
     })
   }
 
@@ -31,7 +52,7 @@ export default function CartLine({ item }) {
         <div className="flex justify-between gap-2">
           <div className="min-w-0">
             <p className="truncate font-display text-lg uppercase leading-tight">{item.name}</p>
-            <p className="font-mono text-xs text-ash">Veličina: {item.size}</p>
+            <p className="font-mono text-xs text-ash">{t.size}: {item.size}</p>
           </div>
           <p className="whitespace-nowrap font-mono text-sm">{formatPrice(item.price * item.qty)}</p>
         </div>
@@ -40,7 +61,7 @@ export default function CartLine({ item }) {
             <button
               onClick={() => updateQty(item.id, item.size, item.qty - 1)}
               className="px-3 py-1.5 transition-colors hover:text-alarm active:scale-90"
-              aria-label={`Smanji količinu: ${item.name}`}
+              aria-label={t.less(item.name)}
             >
               −
             </button>
@@ -48,7 +69,7 @@ export default function CartLine({ item }) {
             <button
               onClick={() => updateQty(item.id, item.size, item.qty + 1)}
               className="px-3 py-1.5 transition-colors hover:text-alarm active:scale-90"
-              aria-label={`Povećaj količinu: ${item.name}`}
+              aria-label={t.more(item.name)}
             >
               +
             </button>
@@ -57,7 +78,7 @@ export default function CartLine({ item }) {
             onClick={remove}
             className="font-mono text-[11px] uppercase tracking-widest text-ash transition-colors hover:text-alarm"
           >
-            Ukloni
+            {t.remove}
           </button>
         </div>
       </div>

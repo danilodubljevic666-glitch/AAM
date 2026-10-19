@@ -74,6 +74,7 @@ function Dashboard({ session }) {
   const [editing, setEditing] = useState(null) // null | 'new' | proizvod
   const [busyId, setBusyId] = useState(null)
   const [version, setVersion] = useState(0)
+  const [translating, setTranslating] = useState(null) // null | { done, total } dok traje "Prevedi sve"
 
   useEffect(() => {
     let cancelled = false
@@ -122,6 +123,32 @@ function Dashboard({ session }) {
     act(p, () => api(`/admin/products/${p.id}`, { method: 'DELETE', token }), `„${p.name}" je obrisana.`)
   }
 
+  // Proizvodi bez engleskog naziva: prevede ih jedan po jedan i odmah sačuva
+  const untranslated = products?.filter((p) => !p.name_en) ?? []
+
+  const translateAll = async () => {
+    const list = untranslated
+    setNotice(null)
+    setTranslating({ done: 0, total: list.length })
+    try {
+      for (const [i, p] of list.entries()) {
+        const en = await api('/admin/translate', {
+          method: 'POST',
+          token,
+          body: JSON.stringify({ name: p.name, description: p.description, tag: p.tag }),
+        })
+        await api(`/admin/products/${p.id}`, { method: 'PATCH', token, body: JSON.stringify({ ...p, ...en }) })
+        setTranslating({ done: i + 1, total: list.length })
+      }
+      setNotice(`Prevedeno na engleski: ${list.length}. Prevod možeš doterati u „Izmijeni".`)
+    } catch (err) {
+      setNotice(`Greška: ${err.message}`)
+    } finally {
+      setTranslating(null)
+      afterChange()
+    }
+  }
+
   const signOut = () => supabase.auth.signOut()
 
   if (loadError?.status === 401 || loadError?.status === 403) {
@@ -158,6 +185,13 @@ function Dashboard({ session }) {
         </div>
         <div className="flex flex-wrap gap-3">
           <button onClick={() => setEditing('new')} className={primaryButton}>+ Nova majica</button>
+          {(untranslated.length > 0 || translating) && (
+            <button onClick={translateAll} disabled={translating !== null} className={secondaryButton}>
+              {translating
+                ? `Prevodim… ${translating.done}/${translating.total}`
+                : `Prevedi na engleski (${untranslated.length})`}
+            </button>
+          )}
           <button onClick={signOut} className={secondaryButton}>Odjavi se</button>
         </div>
       </div>
@@ -187,6 +221,7 @@ function Dashboard({ session }) {
                 <p className="font-display text-2xl uppercase leading-tight">
                   {p.name}
                   {!p.active && <span className="ml-3 align-middle font-mono text-[10px] tracking-widest text-alarm">Sakriveno</span>}
+                  {!p.name_en && <span className="ml-3 align-middle font-mono text-[10px] tracking-widest text-ash">Bez EN prevoda</span>}
                 </p>
                 <p className="mt-1 font-mono text-xs text-ash">
                   /shop/{p.slug} · {p.category} · {p.sizes.join(' ')}

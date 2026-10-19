@@ -1,12 +1,39 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext.jsx'
+import { useT } from '../context/LanguageContext.jsx'
 import { formatPrice } from '../lib/format.js'
 import { shippingFor } from '../lib/shipping.js'
 import CartLine from './CartLine.jsx'
 
+const TEXT = {
+  me: {
+    cart: 'Korpa',
+    close: 'Zatvori korpu',
+    empty: 'Korpa je prazna. Još je rano.',
+    browse: 'Pogledaj majice →',
+    subtotal: 'Međuzbir',
+    shipping: 'Dostava',
+    total: 'Ukupno',
+    checkout: 'Naruči',
+    view: 'Pregled korpe',
+  },
+  en: {
+    cart: 'Cart',
+    close: 'Close cart',
+    empty: "Your cart is empty. It's still early.",
+    browse: 'Browse the tees →',
+    subtotal: 'Subtotal',
+    shipping: 'Delivery',
+    total: 'Total',
+    checkout: 'Checkout',
+    view: 'View cart',
+  },
+}
+
 export default function CartDrawer() {
   const { items, count, total, isOpen, setIsOpen } = useCart()
+  const t = useT(TEXT)
   const closeRef = useRef(null)
   const panelRef = useRef(null)
   const shipping = shippingFor(total)
@@ -61,18 +88,18 @@ export default function CartDrawer() {
         }`}
         role="dialog"
         aria-modal="true"
-        aria-label="Korpa"
+        aria-label={t.cart}
       >
         <div className="flex items-center justify-between border-b border-night-600 px-6 py-5">
           <h2 className="font-display text-2xl uppercase">
-            Korpa
+            {t.cart}
             {count > 0 && <span className="ml-2 font-mono text-xs tracking-widest text-ash">({count})</span>}
           </h2>
           <button
             ref={closeRef}
             onClick={() => setIsOpen(false)}
             className="-m-2 p-2 text-ash transition-colors hover:text-bone"
-            aria-label="Zatvori korpu"
+            aria-label={t.close}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5" aria-hidden="true">
               <path d="M6 6l12 12M18 6L6 18" />
@@ -83,13 +110,13 @@ export default function CartDrawer() {
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
             <p className="animate-fade-up font-display text-5xl text-night-600">02:00</p>
-            <p className="animate-fade-up text-ash [animation-delay:80ms]">Korpa je prazna. Još je rano.</p>
+            <p className="animate-fade-up text-ash [animation-delay:80ms]">{t.empty}</p>
             <Link
               to="/shop"
               onClick={() => setIsOpen(false)}
               className="animate-fade-up px-2 py-2 font-mono text-xs uppercase tracking-widest text-alarm [animation-delay:160ms] hover:underline"
             >
-              Pogledaj majice →
+              {t.browse}
             </Link>
           </div>
         ) : (
@@ -102,15 +129,15 @@ export default function CartDrawer() {
             <div className="border-t border-night-600 px-6 py-5">
               <dl className="space-y-2 font-mono text-sm">
                 <div className="flex justify-between">
-                  <dt className="uppercase text-ash">Međuzbir</dt>
+                  <dt className="uppercase text-ash">{t.subtotal}</dt>
                   <dd>{formatPrice(total)}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="uppercase text-ash">Dostava</dt>
+                  <dt className="uppercase text-ash">{t.shipping}</dt>
                   <dd>{formatPrice(shipping)}</dd>
                 </div>
                 <div className="flex justify-between border-t border-night-600 pt-2 text-base">
-                  <dt className="uppercase">Ukupno</dt>
+                  <dt className="uppercase">{t.total}</dt>
                   <dd>{formatPrice(total + shipping)}</dd>
                 </div>
               </dl>
@@ -119,14 +146,14 @@ export default function CartDrawer() {
                 onClick={() => setIsOpen(false)}
                 className="btn-shine mt-5 block bg-bone py-4 text-center font-mono text-xs font-bold uppercase tracking-widest text-night transition-[background-color,scale] hover:bg-alarm active:scale-[0.98]"
               >
-                Naruči
+                {t.checkout}
               </Link>
               <Link
                 to="/korpa"
                 onClick={() => setIsOpen(false)}
                 className="mt-2 block py-2 text-center font-mono text-[11px] uppercase tracking-widest text-ash transition-colors hover:text-bone"
               >
-                Pregled korpe
+                {t.view}
               </Link>
             </div>
           </>
